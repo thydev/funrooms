@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using SocialLogin.Models;
 
 namespace SocialLogin.Data
 {
@@ -11,7 +12,10 @@ namespace SocialLogin.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-            
+
         }
+
+        public DbSet<User> users { get; set; }
+        public DbSet<Message> messages { get; set; }
     }
 }
