@@ -38,11 +38,11 @@ namespace SocialLogin
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(
                     Configuration.GetConnectionString("DefaultConnection")));
-            // services.AddDefaultIdentity<IdentityUser>()
-            //     .AddEntityFrameworkStores<ApplicationDbContext>();
-            services.AddIdentity<User, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
+            services.AddDefaultIdentity<IdentityUser>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
+            // services.AddIdentity<User, IdentityRole>()
+            //     .AddEntityFrameworkStores<ApplicationDbContext>()
+            //     .AddDefaultTokenProviders();
                 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
