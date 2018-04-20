@@ -35,3 +35,9 @@ body {
         display: none;
     }
 }
+
+.box1 {
+    width: 20px;
+    height: 20px;
+    background-color: green;
+}

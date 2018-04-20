@@ -23,6 +23,10 @@ $(document).ready(function(){
         $("#counting").text(num);
     });
     
+    connection.on("increaseBarClient", width => {
+        $(".box1").width(width);
+    });
+
     connection.on("OnlineUserClient", users => {
         users.forEach(element => {
         const li = document.createElement("li");
@@ -60,7 +64,6 @@ $(document).ready(function(){
     });
 
     $("#countUp").click(function(e){
-
         var num = $("#counting").text();
         connection.invoke("Counter", num)
             .catch(err => console.error);
@@ -82,5 +85,58 @@ $(document).ready(function(){
     //         console.log("Hub started");
     //     }
     //     ).catch(err => console.error);
+        
+        
+    // Gesture functions
+    gest.options.subscribeWithCallback(function(gesture) {
+        var message = '';
+        console.log(gesture.direction);
+
+        if (gesture.direction) {
+            message = gesture.direction;
+
+            $box = $(".box1");
+            console.log($($box).width());
+            // console.log(position);
+            if (gesture.left) {
+                // console.log($($box).width($($box).width() + 10));
+                // $box.css("width", position.width - 10);
+                // $($box).width($($box).width() - 10)
+                connection.invoke("IncreaseBar", $($box).width(), gesture.right)
+                    .catch(err => console.error);
+            }
+            if (gesture.right) {
+                // $$box.css("width", position.width + 10);
+                // $($box).width($($box).width() + 10)
+                connection.invoke("IncreaseBar", $($box).width(), gesture.right)
+                    .catch(err => console.error);
+            }
+        } else {
+            message = gesture.error.message;
+        } 
+        // $("#gestdirection").show();
+        // $("#gestdirection").text(message)
+
+
+        var num = $("#counting").text();
+        connection.invoke("Counter", num)
+            .catch(err => console.error);
+
+        // window.setTimeout(function() {
+        //     $("#gestdirection").hide();
+        // }, 3000);
+    });
+    // gest.start();
+    
+    $("#startcamera").click(function(e){
+        gest.start();
+        console.log("started");
+        e.preventDefault();
+    });
+    $("#stopcamera").click(function(e){
+        gest.stop();
+        console.log("stopped");
+        e.preventDefault();
+    });
 });
 

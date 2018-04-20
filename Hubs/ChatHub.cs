@@ -24,6 +24,11 @@ namespace SocialLogin.Hubs
             await Clients.All.SendAsync("CounterClient", counting);
         }
 
+        public async Task IncreaseBar(int width, bool isRight)
+        {
+            width = isRight ? width + 10 : width - 10;
+            await Clients.All.SendAsync("increaseBarClient", width);
+        }
         
         public Task SendMessageToCaller(string message)
         {
@@ -52,12 +57,10 @@ namespace SocialLogin.Hubs
             
             UserHandler.ConnectedIds.Add(Context.ConnectionId);
 
-
             await Groups.AddAsync(Context.ConnectionId, "SignalR Users");
             
             await base.OnConnectedAsync();
         }
-
         
         public Task Subscribe(string chatroom)
         {
@@ -70,7 +73,6 @@ namespace SocialLogin.Hubs
             System.Console.WriteLine("UnSubscribing:" + Context.ConnectionId);
             return Groups.RemoveAsync(Context.ConnectionId, chatroom);
         }
-
         
     }
 }
