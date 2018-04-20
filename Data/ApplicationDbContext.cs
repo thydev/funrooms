@@ -18,5 +18,13 @@ namespace SocialLogin.Data
 
         public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<Message> Messages { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.Entity<Message>()
+                .Property(r => r.CreatedAt)
+                .HasDefaultValueSql("strftime('%Y-%m-%d %H:%M%S')");
+        }
     }
 }

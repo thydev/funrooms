@@ -14,6 +14,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SocialLogin.Models;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Newtonsoft.Json;
+using SocialLogin.Hubs;
 
 namespace SocialLogin
 {
@@ -100,6 +102,21 @@ namespace SocialLogin
                 googleOptions.ClientSecret = Configuration["Google:ClientSecret"];
             });
 
+            // var settings = new JsonSerializerSettings();
+            // settings.ContractResolver = new SignalRContractResolver();
+
+            // var serializer = JsonSerializer.Create(settings);
+
+            // services.Add(new ServiceDescriptor(typeof(JsonSerializer),
+            //                                 provider => serializer,
+            //                                 ServiceLifetime.Transient));
+
+
+            // services.AddSignalR(options => options.Hubs.EnableDetailedErrors = true);
+            // services.AddSignalRCore();
+            services.AddSignalR();
+
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
@@ -123,12 +140,20 @@ namespace SocialLogin
 
             app.UseAuthentication();
 
+            app.UseWebSockets();
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<ChatHub>("/chathub");
+            });
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            
         }
     }
 }
