@@ -17,5 +17,26 @@ namespace SocialLogin.Controllers
             return View("Chat");
         }
 
+        [HttpGet]
+        [Route("MainRoom2")]
+        public IActionResult MainRoom2()
+        {
+            return View("ChatPresence");
+        }
+
+        [HttpGet]
+        [Route("MoveShape")]
+        public IActionResult MoveShape()
+        {
+            return View("MoveShape");
+        }
+
+        [HttpGet]
+        [Route("Draw")]
+        public IActionResult Draw()
+        {
+            return View("Draw");
+        }
+
     }
 }

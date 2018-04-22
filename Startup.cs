@@ -16,6 +16,8 @@ using SocialLogin.Models;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Newtonsoft.Json;
 using SocialLogin.Hubs;
+using SocialLogin.Services;
+using Microsoft.AspNetCore.SignalR;
 
 namespace SocialLogin
 {
@@ -82,7 +84,7 @@ namespace SocialLogin
             });
 
             // Add application services.
-            services.AddTransient<IEmailSender, EmailSender>();
+            // services.AddTransient<IEmailSender, EmailSender>();
 
             services.AddAuthentication().AddFacebook(facebookOptions =>
             {
@@ -102,22 +104,19 @@ namespace SocialLogin
                 googleOptions.ClientSecret = Configuration["Google:ClientSecret"];
             });
 
-            // var settings = new JsonSerializerSettings();
-            // settings.ContractResolver = new SignalRContractResolver();
-
-            // var serializer = JsonSerializer.Create(settings);
-
-            // services.Add(new ServiceDescriptor(typeof(JsonSerializer),
-            //                                 provider => serializer,
-            //                                 ServiceLifetime.Transient));
-
-
-            // services.AddSignalR(options => options.Hubs.EnableDetailedErrors = true);
-            // services.AddSignalRCore();
-            services.AddSignalR();
-
-
+        
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            // Add application services.
+            // services.AddTransient<IEmailSender, AuthMessageSender>();
+            // services.AddTransient<ISmsSender, AuthMessageSender>();
+
+            services.AddSignalR();
+            services.AddAuthentication().AddCookie();
+            
+            services.AddSingleton(typeof(DefaultHubLifetimeManager<>), typeof(DefaultHubLifetimeManager<>));
+            services.AddSingleton(typeof(HubLifetimeManager<>), typeof(DefaultPresenceHublifetimeManager<>));
+            services.AddSingleton(typeof(IUserTracker<>), typeof(InMemoryUserTracker<>));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -131,19 +130,22 @@ namespace SocialLogin
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // app.UseHsts();
+                app.UseHsts();
             }
 
-            // app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
-            // app.UseCookiePolicy();
+            app.UseCookiePolicy();
 
             app.UseAuthentication();
 
             app.UseWebSockets();
             app.UseSignalR(routes =>
             {
-                routes.MapHub<ChatHub>("/chathub");
+                // routes.MapHub<ChatHub>("/chathub");
+                routes.MapHub<Chat>("/chat");
+                // routes.MapHub<ChatHub>("/chathub");
+                // routes.MapHub<ShapeHub>("/moveshape");
             });
 
             app.UseMvc(routes =>

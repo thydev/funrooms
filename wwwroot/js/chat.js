@@ -9,7 +9,7 @@
 $(document).ready(function(){
     console.log("ready");
     const connection = new signalR.HubConnection(
-        "/chathub", { logger: signalR.LogLevel.Information });
+        "/chat", { logger: signalR.LogLevel.Information });
     
     connection.on("ReceiveMessage", (user, message) => { 
         console.log(user, message);

@@ -1,0 +1,31 @@
+﻿
+    <style>
+        #shape {
+            width: 100px;
+            height: 100px;
+            background-color: red;
+            cursor: move;
+        }
+    </style>
+
+    <div id="shape"></div>
+    <script src="~/lib/signalr/signalr.js"></script>
+    <script>
+        $(document).ready(function(){
+            $shape = $("#shape");
+            var connection = new signalR.HubConnection('/chat');
+
+            connection.on('shapeMoved', function(x, y) {
+                $shape.css({ left: x, top: y });
+            });
+
+            connection.start().then(
+                $shape.draggable({
+                    drag: function () {
+                        connection.invoke("MoveShape", this.offsetLeft, this.offsetTop || 0);
+                    }
+                })
+            );
+        });
+        
+    </script>
