@@ -83,9 +83,17 @@ namespace SocialLogin.Hubs
             await Clients.Others.SendAsync("shapeMoved", x, y);
         }
 
-        public Task Draw(int prevX, int prevY, int currentX, int currentY, string color)
+        public async Task Draw(int prevX, int prevY, int currentX, int currentY, string color)
         {
-            return Clients.Others.SendAsync("draw", prevX, prevY, currentX, currentY, color);
+            await Clients.Others.SendAsync("draw", prevX, prevY, currentX, currentY, color);
+        }
+
+        public async Task UpdateGameState(object GameState )
+        {
+            System.Console.WriteLine();
+            System.Console.WriteLine(GameState.ToString());
+            System.Console.WriteLine();
+            await Clients.All.SendAsync("getGameState", GameState);
         }
     }
 }
