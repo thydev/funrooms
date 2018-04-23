@@ -88,7 +88,8 @@
             return;
         }
         var userLi = document.createElement('li');
-        userLi.innerText = `${user.name} (${user.connectionId})`;
+        //need to add message created_at to chatroom
+        userLi.innerText = `${user.name} ${user.created_at}`;
         userLi.id = user.connectionId;
         document.getElementById('users').appendChild(userLi);
     }

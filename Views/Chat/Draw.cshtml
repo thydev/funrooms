@@ -60,7 +60,7 @@
 
                 if ((last_mousex > 0 && last_mousey > 0) && mousedown) {
                     drawCanvas(mousex, mousey, last_mousex, last_mousey, clr);
-                    connection.invoke('draw', last_mousex, last_mousey, mousex, mousey, clr);
+                    connection.invoke('Draw', last_mousex, last_mousey, mousex, mousey, clr);
                 }
                 last_mousex = mousex;
                 last_mousey = mousey;
