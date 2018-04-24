@@ -29,6 +29,56 @@
     </div>
 </div>
 
-<script src="~/js/gest.js"></script>
+
 <script src="~/lib/signalr/signalr.js"></script>
-<script src="~/js/chat.js"></script>
+<script src="~/js/gest.js"></script>
+<script>
+    $(document).ready(function(){
+
+        var connection = new signalR.HubConnection('/chat');
+        connection.on("CounterClient", num => {
+        $("#counting").text(num);
+            });
+        connection.on("GrowTreeWidthClient", width => {
+        $(".tree").width(width);
+            }); 
+        connection.on("GrowTreeHeightClient", height => {
+        $(".tree").height(height);
+            });
+        connection.start();
+        gest.options.subscribeWithCallback(function(gesture) {
+            var message = '';
+            console.log(gesture.direction);
+
+            if (gesture.direction) {
+                message = gesture.direction;
+
+                $tree = $(".tree");
+                console.log($($tree).width());
+                console.log($($tree).height());
+                // console.log(position);
+                if (gesture.up) {
+                    connection.invoke("GrowTreeWidth", $($tree).width(), gesture.up)
+                    connection.invoke("GrowTreeHeight", $($tree).height(), gesture.up)
+                        .catch(err => console.error);
+                }
+            } else {
+                message = gesture.error.message;
+            } 
+
+            var num = $("#counting").text();
+            connection.invoke("Counter", num)
+                .catch(err => console.error);
+        });
+        $("#startcamera").click(function(e){
+            gest.start();
+            console.log("started");
+            e.preventDefault();
+        });
+        $("#stopcamera").click(function(e){
+            gest.stop();
+            console.log("stopped");
+            e.preventDefault();
+        });
+    });
+</script>
