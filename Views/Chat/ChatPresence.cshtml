@@ -2,16 +2,44 @@
     ViewData["Title"] = "Chat";
 }
 
-<div id="chat-area">
-    <ul id="messages"></ul>
-    <ul id="users">
-        <li><b>Users online</b></li>
-    </ul>
+<div class="row">
+    <h2  style="border-bottom: 1pt solid black">Pick a Game Room</h2>
+    <div class="class=col-md-10">
+        <div class="col-md-2"><a class="btn btn-lg btn-primary" style="margin-bottom: 10px" role="button" href="/MainRoom2">Main Room</a></div>
+        <div class="col-md-3" style="margin-bottom: 10px"><a class="btn btn-lg btn-warning" role="button" href="">Earth Defender Room</a></div>
+        <div class="col-md-3" style="margin-bottom: 10px"><a class="btn btn-lg btn-danger" role="button" href="/MoveShape">Move Shape Room</a></div>
+        <div class="col-md-3" style="margin-bottom: 10px"><a class="btn btn-lg btn-info" role="button" href="/Draw">WhiteBoard Room</a></div>
+        <div class="col-md-3" style="margin-bottom: 10px"><a class="btn btn-lg btn-success" role="button" href="">Tree Growing Room</a></div>
+        <div class="col-md-3" style="margin-bottom: 10px"><a class="btn btn-lg btn-default" role="button" href="">Snail Race Room</a></div>
+    </div>
+    <br>
+</div>
+<!-- added some simple bootstrap styling -->
+<div class="row">
+    <div class="col-md-8" style="border-bottom: solid black 2pt">
+        <h3 class="text-primary">Messages</h3>
+    </div>
+    <div class="col-md-3" style="border-bottom: solid black 2pt">
+        <h3 class="text-success text-top">Users Logged-in</h3>
+    </div>
+</div>
+
+<div class="row" id="chat-area">
+    <div class="col-md-8" style="border-right: solid black 1pt">
+        <p id="messages"></p>
+    </div>
+    <div class="col-md-3">
+        <p id="users"></p>
+    </div>
     <div class="clear">
     </div>
     <form id="sendmessage" action="#">
-        <input type="text" id="new-message" />
-        <input type="submit" id="send" value="Send" class="send" />
+        <div class="col-md-8">
+            <input class="form-control" type="text" id="new-message">
+        </div>
+        <div class="col-md-3">
+        <button type="submit" id="send" class="send btn btn-success btn-block col-md-4" >Send</button>
+        </div>
     </form>
 </div>
 <script src="~/lib/signalr/signalr.js"></script>
@@ -21,7 +49,9 @@
 //   .configureLogging(signalR.LogLevel.Information)
 //    .withUrl("/chat", transportType)
 //    .build();
-
+    var usercolorobj = {};
+    var count = 0;
+    var color = ["red", "green", "blue", "purple", "darkgold", "black", "orange", "dodgerblue", "violet", "tomato", "magenta"];
     
     const connection = new signalR.HubConnection(
         "/chat", { logger: signalR.LogLevel.Information });
@@ -41,14 +71,14 @@
 
     connection.on('UsersJoined', users => {
         users.forEach(user => {
-            appendLine('User ' + user.name + ' joined the chat');
+            appendLine('User ' + user.name + ' joined the chat', 'green');
             addUserOnline(user);
         });
     });
 
     connection.on('UsersLeft', users => {
         users.forEach(user => {
-            appendLine('User ' + user.name + ' left the chat');
+            appendLine('User ' + user.name + ' left the chat', 'red');
             document.getElementById(user.connectionId).outerHTML = '';
         });
     });
@@ -56,13 +86,24 @@
     connection.on('Send', (userName, message) => {
         var nameElement = document.createElement('b');
         nameElement.innerText = userName + ':';
-
+        for(var key in usercolorobj){
+            if(key == userName){
+                nameElement.style.color = usercolorobj[key];
+                break;
+            }
+        }
         var msgElement = document.createElement('span');
         msgElement.innerText = ' ' + message;
+        //added in datetime for when message created.
+        var now = new Date();
+        var msgTimestamp = document.createElement('p');
+        msgTimestamp.className = "pull-right";
+        msgTimestamp.innerText = ' ~ ' + now.toLocaleString();
 
-        var child = document.createElement('li');
+        var child = document.createElement('p');
         child.appendChild(nameElement);
         child.appendChild(msgElement);
+        child.appendChild(msgTimestamp);
         document.getElementById('messages').appendChild(child);
     });
 
@@ -75,7 +116,7 @@
     });
 
     function appendLine(line, color) {
-        let child = document.createElement('li');
+        let child = document.createElement('p');
         if (color) {
             child.style.color = color;
         }
@@ -87,10 +128,19 @@
         if (document.getElementById(user.connectionId)) {
             return;
         }
-        var userLi = document.createElement('li');
-        //need to add message created_at to chatroom
-        userLi.innerText = `${user.name} ${user.created_at}`;
+        var userLi = document.createElement('p');
+        userLi.innerText = `${user.name}`;
         userLi.id = user.connectionId;
+        while(count<color.length){
+        var usercolor = color[count];
+        userLi.style.color = usercolor;
+        usercolorobj[user.name] = usercolor;
+            if(count == 9){
+                count = 0;
+            }
+            count++;
+            break;
+        }
         document.getElementById('users').appendChild(userLi);
     }
 
