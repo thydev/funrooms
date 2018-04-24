@@ -1,12 +1,15 @@
 
 <h1>Welcome to the Growing Tree Room</h1>
-<div class="container">
+<div class="newgame text-center">
+    <br>
+    <h2 class="">Ready to Play?</h2>
+    <button class="btn btn-lg btn-success gamestart">Start Game</button>
+</div>
+<div id="container">
     <div class="row">
         <div class="col-md-6">
             <h2 id="gestdirection">Direction</h2>
             <h4>Wave Hand Up to Grow Tree</h4>
-            <button id="startcamera">Start Game</button>
-            <button id="stopcamera">Stop Camera</button>
         </div>
     </div>
     <div class="row">
@@ -29,23 +32,77 @@
     </div>
 </div>
 
-
 <script src="~/lib/signalr/signalr.js"></script>
 <script src="~/js/gest.js"></script>
 <script>
     $(document).ready(function(){
+        $("#container").hide();
+        $("#counting").hide();
+        //hide start game button until 2 players are in lobby
+        console.log("ready");
+        const treehub = new signalR.HubConnection(
+            "/growingtree", { logger: signalR.LogLevel.Information });
 
-        var connection = new signalR.HubConnection('/chat');
-        connection.on("CounterClient", num => {
-        $("#counting").text(num);
-            });
-        connection.on("GrowTreeWidthClient", width => {
+        //////// Testing below for 2 player
+    treehub.on('SetUsersOnline', usersOnline => {
+        usersOnline.forEach(user => addUserOnline(user));
+    });
+
+    treehub.on('UsersJoined', users => {
+        users.forEach(user => {
+            appendLine('User ' + user.name + ' joined the chat', 'green');
+            addUserOnline(user);
+        });
+    });
+
+    treehub.on('UsersLeft', users => {
+        users.forEach(user => {
+            appendLine('User ' + user.name + ' left the chat', 'red');
+            document.getElementById(user.connectionId).outerHTML = '';
+        });
+    });
+    //Change to update the game by adding in second player tree and updates
+    treehub.on('Send', (userName, message) => {
+        var nameElement = document.createElement('b');
+        nameElement.innerText = userName + ':';
+        for(var key in usercolorobj){
+            if(key == userName){
+                nameElement.style.color = usercolorobj[key];
+                break;
+            }
+        }
+        var msgElement = document.createElement('span');
+        msgElement.innerText = ' ' + message;
+        //added in datetime for when message created.
+        var now = new Date();
+        var msgTimestamp = document.createElement('p');
+        msgTimestamp.className = "pull-right";
+        msgTimestamp.innerText = ' ~ ' + now.toLocaleString();
+
+        var child = document.createElement('p');
+        child.appendChild(nameElement);
+        child.appendChild(msgElement);
+        child.appendChild(msgTimestamp);
+        document.getElementById('messages').appendChild(child);
+        ClearMessage();
+    });
+        ////////
+        treehub.on("CounterClient", num => {
+            $("#counting").text(num);
+            console.log(num);
+            //ends game once num hits 40
+            if(num == 40){
+                $("#container").html("<div class='text-center'><h1>Game Over</h1><p><a class='btn btn-success' role='button' href='/treegrowing'>Play Again?</a></p><p>Your Score = "+num+"</p></div>");
+                gest.stop();
+            }
+        });
+        treehub.on("GrowTreeWidthClient", width => {
         $(".tree").width(width);
             }); 
-        connection.on("GrowTreeHeightClient", height => {
+        treehub.on("GrowTreeHeightClient", height => {
         $(".tree").height(height);
             });
-        connection.start();
+        treehub.start();
         gest.options.subscribeWithCallback(function(gesture) {
             var message = '';
             console.log(gesture.direction);
@@ -58,27 +115,45 @@
                 console.log($($tree).height());
                 // console.log(position);
                 if (gesture.up) {
-                    connection.invoke("GrowTreeWidth", $($tree).width(), gesture.up)
-                    connection.invoke("GrowTreeHeight", $($tree).height(), gesture.up)
+                    treehub.invoke("GrowTreeWidth", $($tree).width(), gesture.up)
+                    treehub.invoke("GrowTreeHeight", $($tree).height(), gesture.up)
+                        .catch(err => console.error);
+                    var num = $("#counting").text();
+                    treehub.invoke("Counter", num)
                         .catch(err => console.error);
                 }
             } else {
                 message = gesture.error.message;
             } 
 
-            var num = $("#counting").text();
-            connection.invoke("Counter", num)
-                .catch(err => console.error);
         });
-        $("#startcamera").click(function(e){
+        //Testing below:
+        function addUserOnline(user) {
+        if (document.getElementById(user.connectionId)) {
+            return;
+        }
+        var userLi = document.createElement('p');
+        userLi.innerText = `${user.name}`;
+        userLi.id = user.connectionId;
+        while(count<color.length){
+        var usercolor = color[count];
+        userLi.style.color = usercolor;
+        usercolorobj[user.name] = usercolor;
+            count++;
+            if(count == 10){
+                count = 0;
+            }
+            break;
+        }
+        document.getElementById('users').appendChild(userLi);
+    }
+    ///
+        $(".gamestart").click(function(e){
             gest.start();
             console.log("started");
             e.preventDefault();
-        });
-        $("#stopcamera").click(function(e){
-            gest.stop();
-            console.log("stopped");
-            e.preventDefault();
+            $("#container").show();
+            $(".newgame").hide();
         });
     });
 </script>

@@ -25,6 +25,7 @@ namespace SocialLogin.Hubs
 
         public override Task OnUsersJoined(UserDetails[] users)
         {
+            
             return Clients.Client(Context.ConnectionId).SendAsync("UsersJoined", users);
         }
 
@@ -87,7 +88,6 @@ namespace SocialLogin.Hubs
             return Clients.Groups(groups).SendAsync($"ReceiveMessage{chatroom}" , message + "Group");
 
         }
-
 
         public async Task MoveShape(int x , int y)
         {
