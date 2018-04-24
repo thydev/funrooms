@@ -26,6 +26,13 @@ $(document).ready(function(){
     connection.on("increaseBarClient", width => {
         $(".box1").width(width);
     });
+    connection.on("GrowTreeWidthClient", width => {
+        $(".tree").width(width);
+    }); 
+    connection.on("GrowTreeHeightClient", height => {
+        $(".tree").height(height);
+    });
+    
 
     connection.on("OnlineUserClient", users => {
         users.forEach(element => {
@@ -97,12 +104,24 @@ $(document).ready(function(){
 
             $box = $(".box1");
             console.log($($box).width());
+            $tree = $(".tree");
+            console.log($($tree).width());
+            console.log($($tree).height());
             // console.log(position);
             if (gesture.left) {
                 // console.log($($box).width($($box).width() + 10));
                 // $box.css("width", position.width - 10);
                 // $($box).width($($box).width() - 10)
                 connection.invoke("IncreaseBar", $($box).width(), gesture.right)
+                    .catch(err => console.error);
+        //
+            }
+            if (gesture.up) {
+                // console.log($($box).width($($box).width() + 10));
+                // $box.css("width", position.width - 10);
+                // $($box).width($($box).width() - 10)
+                connection.invoke("GrowTreeWidth", $($tree).width(), gesture.up)
+                connection.invoke("GrowTreeHeight", $($tree).height(), gesture.up)
                     .catch(err => console.error);
             }
             if (gesture.right) {

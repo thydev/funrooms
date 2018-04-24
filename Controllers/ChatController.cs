@@ -37,6 +37,6 @@ namespace SocialLogin.Controllers
         {
             return View("Draw");
         }
-
+        
     }
 }
