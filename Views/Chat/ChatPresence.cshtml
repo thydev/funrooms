@@ -38,7 +38,7 @@
             <input class="form-control" type="text" id="new-message">
         </div>
         <div class="col-md-3">
-        <button type="submit" id="send" class="send btn btn-success btn-block col-md-4" >Send</button>
+        <button type="submit" id="send" class="send btn btn-success btn-block col-md-4">Send</button>
         </div>
     </form>
 </div>
@@ -105,6 +105,7 @@
         child.appendChild(msgElement);
         child.appendChild(msgTimestamp);
         document.getElementById('messages').appendChild(child);
+        ClearMessage();
     });
 
     connection.start().catch(err => appendLine(err, 'red'));
@@ -135,10 +136,10 @@
         var usercolor = color[count];
         userLi.style.color = usercolor;
         usercolorobj[user.name] = usercolor;
-            if(count == 9){
+            count++;
+            if(count == 10){
                 count = 0;
             }
-            count++;
             break;
         }
         document.getElementById('users').appendChild(userLi);
@@ -155,5 +156,8 @@
         if (!results[2]) return '';
         return decodeURIComponent(results[2].replace(/\+/g, " "));
     };
+    function ClearMessage(){
+        document.getElementById('new-message').value = "";
+    }
 
 </script>
