@@ -1,5 +1,11 @@
 
 $(document).ready(function(){
+    var tempState = {
+        shipName: "xtrem",
+        currentScore: 99,
+        destroyedAsteroid: 129,
+    }
+
     const connection = new signalR.HubConnection(
         "/chat", { logger: signalR.LogLevel.Information });
     connection.start()
@@ -9,14 +15,20 @@ $(document).ready(function(){
         
 
     $("#send").click(function(){
-        connection.invoke("UpdateGameState", gameState)
+        connection.invoke("UpdateGameState", tempState)
             .catch(err => console.error);
     });
 
     connection.on("getGameState", gameState => {
+        console.log("backfrom server");
+        gameState = JSON.parse(gameState);
         console.log(gameState);
+        console.log(gameState["currentScore"]);
+        console.log(gameState.destroyedAsteroid);
     });
 });
+
+
 
 var assetUrl = "images/edassets/";
 // Loading assets

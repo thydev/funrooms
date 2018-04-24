@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using SocialLogin;
+using SocialLogin.Models;
+using Newtonsoft.Json;
+
 namespace SocialLogin.Hubs
 {
     [Authorize]
@@ -88,12 +91,15 @@ namespace SocialLogin.Hubs
             await Clients.Others.SendAsync("draw", prevX, prevY, currentX, currentY, color);
         }
 
-        public async Task UpdateGameState(object GameState )
+        public async Task UpdateGameState(GameState gameState )
         {
             System.Console.WriteLine();
-            System.Console.WriteLine(GameState.ToString());
+
+            System.Console.WriteLine(gameState.shipName);
+            System.Console.WriteLine(gameState.currentScore);
+            System.Console.WriteLine(gameState.destroyedAsteroid);
             System.Console.WriteLine();
-            await Clients.All.SendAsync("getGameState", GameState);
+            await Clients.All.SendAsync("getGameState", JsonConvert.SerializeObject(gameState));
         }
     }
 }
