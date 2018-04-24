@@ -114,7 +114,7 @@ $(document).ready(function(){
                 // $($box).width($($box).width() - 10)
                 connection.invoke("IncreaseBar", $($box).width(), gesture.right)
                     .catch(err => console.error);
-        //
+        // added gesture up for growing tree
             }
             if (gesture.up) {
                 // console.log($($box).width($($box).width() + 10));
