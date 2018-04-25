@@ -49,5 +49,9 @@ namespace SocialLogin.Hubs
         {
             return Clients.Caller.SendAsync("ReceiveMessage", message + "caller");
         }
+        public async Task StartGame(bool isRight){
+            // e = isRight;
+            await Clients.All.SendAsync("StartGameClient");
+        }
     }
 }

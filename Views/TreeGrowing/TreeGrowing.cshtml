@@ -72,6 +72,8 @@
         if(usercount<2){
             $(".gamestart").hide();
             $(".playtext").hide();
+            $(".container").hide();
+            $(".newgame").show();
             $(".readytext").show();
         }
     });
@@ -107,6 +109,7 @@
         treehub.on("GrowTreeHeightClient", height => {
         $(".tree").height(height);
             });
+        
         treehub.start();
         gest.options.subscribeWithCallback(function(gesture) {
             var message = '';
@@ -114,13 +117,10 @@
 
             if (gesture.direction) {
                 message = gesture.direction;
-                //var thisuser = this.user.connectionId;
-                //this.user.connectionId;
-                //console.log(thisuser);
+                //console.log(user);
                 $tree = $(".tree");
                 console.log($($tree).width());
                 console.log($($tree).height());
-                // console.log(position);
                 if (gesture.up) {
                     treehub.invoke("GrowTreeWidth", $($tree).width(), gesture.up)
                     treehub.invoke("GrowTreeHeight", $($tree).height(), gesture.up)
@@ -177,12 +177,17 @@
         }
     ///
         
+
         $(".gamestart").click(function(e){
             gest.start();
             console.log("started");
             e.preventDefault();
             $("#container").show();
             $(".newgame").hide();
+            //if(e){
+            //    treehub.invoke("StartGame", e);
+                
+            //}
         });
     });
 
