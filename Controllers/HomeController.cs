@@ -10,11 +10,15 @@ namespace SocialLogin.Controllers
 {
     public class HomeController : Controller
     {
+        [HttpGet]
+        [Route("")]
         public IActionResult Index()
         {
             return View();
         }
 
+        [HttpGet]
+        [Route("About")]
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
@@ -22,6 +26,7 @@ namespace SocialLogin.Controllers
             return View();
         }
 
+        [HttpGet, Route("Contact")]
         public IActionResult Contact()
         {
             ViewData["Message"] = "Your contact page.";
@@ -29,6 +34,7 @@ namespace SocialLogin.Controllers
             return View();
         }
 
+        [HttpGet, Route("Privacy")]
         public IActionResult Privacy()
         {
             return View();
