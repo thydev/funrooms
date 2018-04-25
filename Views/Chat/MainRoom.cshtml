@@ -5,12 +5,13 @@
 <div class="row">
     <h2  style="border-bottom: 1pt solid black">Pick a Game Room</h2>
     <div class="col-sm-10 col-md-10">
-        <div class="col-sm-5 col-md-4"><a class="btn btn-lg btn-primary" style="margin-bottom: 10px" role="button" href="/MainRoom2">Main Room</a></div>
-        <div class="col-sm-5 col-md-4" style="margin-bottom: 10px"><a class="btn btn-lg btn-warning" role="button" href="">Earth Defender Room</a></div>
-        <div class="col-sm-5 col-md-4" style="margin-bottom: 10px"><a class="btn btn-lg btn-danger" role="button" href="/MoveShape">Move Shape Room</a></div>
-        <div class="col-sm-5 col-md-4" style="margin-bottom: 10px"><a class="btn btn-lg btn-info" role="button" href="/Draw">WhiteBoard Room</a></div>
-        <div class="col-sm-5 col-md-4" style="margin-bottom: 10px"><a class="btn btn-lg btn-success" role="button" href="/treegrowing">Tree Growing Room</a></div>
-        <div class="col-sm-5 col-md-4" style="margin-bottom: 10px"><a class="btn btn-lg btn-default" role="button" href="">Snail Race Room</a></div>
+        <div class="col-sm-5 col-md-4"><a class="btn btn-lg btn-primary" style="margin-bottom: 10px" role="button" asp-controller="Chat" asp-action="MainRoom">Main Room</a></div>
+        <div class="col-sm-5 col-md-4" style="margin-bottom: 10px"><a class="btn btn-lg btn-warning" role="button" asp-controller="EarthDefender" asp-action="EarthDefenderSingle">Earth Defender Room</a></div>
+        <div class="col-sm-5 col-md-4" style="margin-bottom: 10px"><a class="btn btn-lg btn-warning" role="button" asp-controller="EarthDefender" asp-action="EarthDefenderMulti">Earth Defender Multi</a></div>
+        <div class="col-sm-5 col-md-4" style="margin-bottom: 10px"><a class="btn btn-lg btn-danger" role="button" asp-controller="MoveShape" asp-action="MoveShapeRoom">Move Shape Room</a></div>
+        <div class="col-sm-5 col-md-4" style="margin-bottom: 10px"><a class="btn btn-lg btn-info" role="button" asp-controller="WhiteBoard" asp-action="WhiteBoardRoom">WhiteBoard Room</a></div>
+        <div class="col-sm-5 col-md-4" style="margin-bottom: 10px"><a class="btn btn-lg btn-success" role="button" asp-controller="TreeGrowing" asp-action="TreeGrowingRoom">Tree Growing Room</a></div>
+        <div class="col-sm-5 col-md-4" style="margin-bottom: 10px"><a class="btn btn-lg btn-default" role="button" asp-controller="SnailRacing" asp-action="SnailRacingRoom">Snail Race Room</a></div>
     </div>
     <br>
 </div>

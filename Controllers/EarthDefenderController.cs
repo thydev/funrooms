@@ -8,7 +8,7 @@ using SocialLogin.Models;
 
 namespace SocialLogin.Controllers
 {
-    public class GameController : Controller
+    public class EarthDefenderController : Controller
     {
         [HttpGet]
         [Route("EarthDefenderSingle")]
@@ -23,6 +23,6 @@ namespace SocialLogin.Controllers
         {
             return View("EarthDefenderMulti");
         }
-
+        
     }
 }

@@ -1,0 +1,24 @@
+﻿
+    <style>
+        canvas {
+            cursor: crosshair;
+            border: 1px solid #000000;
+        }
+    </style>
+
+    <canvas id="canvas" width="800" height="500" ></canvas>
+    <div class="col-sm-4 col-md-3" style="border-left: solid black 1pt">
+        <p id="users" style="display: static"></p>
+    </div>
+    <select id="color">
+        <option value="black">Black</option>
+        <option value="red">Red</option>
+        <option value="yellow">Yellow</option>
+        <option value="green">Green</option>
+        <option value="blue">Blue</option>
+    </select>
+    <div id="output"></div>
+    <script src="~/lib/signalr/signalr.js"></script>
+    <script src="~/js/gest.js"></script>
+    <script src="~/js/whiteboard.js"></script>
+    

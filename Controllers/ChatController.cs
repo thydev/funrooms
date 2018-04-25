@@ -11,32 +11,19 @@ namespace SocialLogin.Controllers
     public class ChatController : Controller
     {
         [HttpGet]
+        [Route("SignalRtest")]
+        public IActionResult SignalRtest()
+        {
+            return View("SignalRtest");
+        }
+
+        [HttpGet]
         [Route("MainRoom")]
         public IActionResult MainRoom()
         {
-            return View("Chat");
+            return View("MainRoom");
         }
 
-        [HttpGet]
-        [Route("MainRoom2")]
-        public IActionResult MainRoom2()
-        {
-            return View("ChatPresence");
-        }
-
-        [HttpGet]
-        [Route("MoveShape")]
-        public IActionResult MoveShape()
-        {
-            return View("MoveShape");
-        }
-
-        [HttpGet]
-        [Route("Draw")]
-        public IActionResult Draw()
-        {
-            return View("Draw");
-        }
         
     }
 }

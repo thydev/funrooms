@@ -7,13 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using SocialLogin.Models;
 
 namespace SocialLogin.Controllers{
-    public class TreeGrowingController : Controller 
+    public class MoveShapeController : Controller 
     {
         [HttpGet]
-        [Route("TreeGrowing")]
-        public IActionResult TreeGrowingRoom(){
-            
-            return View("TreeGrowing");
+        [Route("MoveShape")]
+        public IActionResult MoveShapeRoom()
+        {
+            return View("MoveShape");
         }
     }
 }

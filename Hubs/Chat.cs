@@ -94,11 +94,6 @@ namespace SocialLogin.Hubs
             await Clients.Others.SendAsync("shapeMoved", x, y);
         }
 
-        public async Task Draw(int prevX, int prevY, int currentX, int currentY, string color)
-        {
-            await Clients.Others.SendAsync("draw", prevX, prevY, currentX, currentY, color);
-        }
-
         public async Task UpdateGameState(GameState gameState )
         {
             System.Console.WriteLine();

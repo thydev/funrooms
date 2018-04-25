@@ -9,7 +9,7 @@ namespace SocialLogin.Hubs
     [Authorize]
     public class WhiteBoard : HubWithPresence
     {
-        public WhiteBoard(IUserTracker<GrowingTree> userTracker)
+        public WhiteBoard(IUserTracker<WhiteBoard> userTracker)
             : base(userTracker)
         {
 
@@ -22,15 +22,9 @@ namespace SocialLogin.Hubs
 
         public override Task OnUsersJoined(UserDetails[] users)
         {
-            
             return Clients.Client(Context.ConnectionId).SendAsync("UsersJoined", users);
         }
-        public async Task Counter(int counting)
-        {
-            counting++;
-            await Clients.All.SendAsync("CounterClient", counting);
-        }
-
+        
         public override Task OnUsersLeft(UserDetails[] users)
         {
             return Clients.Client(Context.ConnectionId).SendAsync("UsersLeft", users);
@@ -39,6 +33,11 @@ namespace SocialLogin.Hubs
         public Task SendMessageToCaller(string message)
         {
             return Clients.Caller.SendAsync("ReceiveMessage", message + "caller");
+        }
+
+        public async Task Draw(int prevX, int prevY, int currentX, int currentY, string color)
+        {
+            await Clients.Others.SendAsync("draw", prevX, prevY, currentX, currentY, color);
         }
     }
 }
