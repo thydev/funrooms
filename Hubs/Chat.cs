@@ -39,14 +39,11 @@ namespace SocialLogin.Hubs
             await Clients.All.SendAsync("Send", Context.User.Identity.Name, message);
         }
 
-
-
         public async Task SendMessage(string user, string message)
         {
             await Clients.All.SendAsync("ReceiveMessage", user, message + "All");
 
         }
-
 
         public async Task Counter(int counting)
         {
