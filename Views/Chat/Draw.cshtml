@@ -7,6 +7,9 @@
     </style>
 
     <canvas id="canvas" width="800" height="500" ></canvas>
+    <div class="col-sm-4 col-md-3" style="border-left: solid black 1pt">
+        <p id="users" style="display: static"></p>
+    </div>
     <select id="color">
         <option value="black">Black</option>
         <option value="red">Red</option>
@@ -16,7 +19,11 @@
     </select>
     <div id="output"></div>
     <script src="~/lib/signalr/signalr.js"></script>
+    <script src="~/js/gest.js"></script>
     <script>
+        var usercolorobj = {};
+        var count = 0;
+        var color = ["red", "green", "blue", "purple", "darkgold", "black", "orange", "dodgerblue", "violet", "tomato", "magenta"];
         $(document).ready(function(){
             $("#canvas").mouseout(function(){
                 clearMousePositions();
@@ -70,19 +77,52 @@
 
             var mouse_down = false;
 
-            var connection = new signalR.HubConnection('/chat');
+            const connection = new signalR.HubConnection('/whiteboard', { logger: signalR.LogLevel.Information });
             connection.on('draw', function (prev_x, prev_y, x, y, clr) {
                 console.log("X: " + x + " Y: " + y);
                 drawCanvas(prev_x, prev_y, x, y, clr);
             });
+            connection.on('SetUsersOnline', usersOnline => {
+                usersOnline.forEach(user => addUserOnline(user));
+            });
 
+            connection.on('UsersJoined', users => {
+                users.forEach(user => {
+                    appendLine('User ' + user.name + ' joined the chat', 'green');
+                    addUserOnline(user);
+                });
+            });
+
+            connection.on('UsersLeft', users => {
+                users.forEach(user => {
+                    appendLine('User ' + user.name + ' left the chat', 'red');
+                    document.getElementById(user.connectionId).outerHTML = '';
+                });
+            });
             connection.start();
 
+            function addUserOnline(user) {
+                if (document.getElementById(user.connectionId)) {
+                    return;
+                }
+                var userLi = document.createElement('p');
+                userLi.innerText = `${user.name}`;
+                userLi.id = user.connectionId;
+                while(count<color.length){
+                var usercolor = color[count];
+                userLi.style.color = usercolor;
+                usercolorobj[user.name] = usercolor;
+                    count++;
+                    if(count == 10){
+                        count = 0;
+                    }
+                    break;
+                }
+                document.getElementById('users').appendChild(userLi);
+            }
             clearMousePositions = function () {
                 last_mousex = 0;
                 last_mousey = 0;
             }
         });
-        
-
     </script>
