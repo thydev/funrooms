@@ -56,17 +56,17 @@ namespace SocialLogin.Hubs
             width = isRight ? width + 10 : width - 10;
             await Clients.All.SendAsync("increaseBarClient", width);
         }
-        // Grow Tree
-        public async Task GrowTreeWidth(int width, bool isRight)
-        {
-            width = isRight ? width + 8 : width - 0;
-            await Clients.All.SendAsync("GrowTreeWidthClient", width);
-        }
-        public async Task GrowTreeHeight(int height, bool isRight)
-        {
-            height = isRight ? height + 10 : height - 0;
-            await Clients.All.SendAsync("GrowTreeHeightClient", height);
-        }
+        // Grow Tree, context.User.Identity.Name: GrowWidth and
+        // public async Task GrowTreeWidth(int width, bool isRight)
+        // {
+        //     width = isRight ? width + 8 : width - 0;
+        //     await Clients.All.SendAsync("GrowTreeWidthClient", width, Context.User.Identity.Name);
+        // }
+        // public async Task GrowTreeHeight(int height, bool isRight)
+        // {
+        //     height = isRight ? height + 10 : height - 0;
+        //     await Clients.All.SendAsync("GrowTreeHeightClient", height);
+        // }
         // 
         public Task SendMessageToCaller(string message)
         {

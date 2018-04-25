@@ -35,20 +35,19 @@ namespace SocialLogin.Hubs
         {
             return Clients.Client(Context.ConnectionId).SendAsync("UsersLeft", users);
         }
-        public async Task GrowTreeWidth(int width, bool isRight)
+        //notes: .All to .Others
+        public async Task GrowTreeWidth(int width, int height, bool isRight)
         {
             width = isRight ? width + 8 : width - 0;
-            await Clients.All.SendAsync("GrowTreeWidthClient", width);
-        }
-        public async Task GrowTreeHeight(int height, bool isRight)
-        {
             height = isRight ? height + 10 : height - 0;
-            await Clients.All.SendAsync("GrowTreeHeightClient", height);
+            await Clients.All.SendAsync("GrowTreeWidthClient", width, height, Context.User.Identity.Name);
         }
+        
         public Task SendMessageToCaller(string message)
         {
             return Clients.Caller.SendAsync("ReceiveMessage", message + "caller");
         }
+        //
         public async Task StartGame(bool isRight){
             // e = isRight;
             await Clients.All.SendAsync("StartGameClient");
