@@ -18,6 +18,7 @@ using Newtonsoft.Json;
 using SocialLogin.Hubs;
 using SocialLogin.Services;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace SocialLogin
 {
@@ -137,6 +138,11 @@ namespace SocialLogin
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
+            
             app.UseAuthentication();
 
             app.UseWebSockets();
@@ -145,16 +151,18 @@ namespace SocialLogin
                 // routes.MapHub<ChatHub>("/chathub");
                 routes.MapHub<Chat>("/chat");
                 routes.MapHub<GrowingTree>("/growingtree");
+                // routes.MapHub<WhiteBoardHub>("/whiteboard");
                 // routes.MapHub<ChatHub>("/chathub");
                 // routes.MapHub<ShapeHub>("/moveshape");
             });
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
+            app.UseMvc();
+            // app.UseMvc(routes =>
+            // {
+            //     routes.MapRoute(
+            //         name: "default",
+            //         template: "{controller=Home}/{action=Index}/{id?}");
+            // });
 
             
         }

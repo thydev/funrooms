@@ -6,14 +6,15 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SocialLogin.Models;
 
-namespace SocialLogin.Controllers{
-    public class TreeGrowingController : Controller 
+namespace SocialLogin.Controllers
+{
+    public class WhiteBoardController : Controller 
     {
         [HttpGet]
-        [Route("TreeGrowing")]
-        public IActionResult TreeGrowingRoom(){
-            
-            return View("TreeGrowing");
+        [Route("WhiteBoard")]
+        public IActionResult WhiteBoardRoom()
+        {
+            return View("WhiteBoard");
         }
     }
 }

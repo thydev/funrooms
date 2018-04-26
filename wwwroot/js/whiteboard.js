@@ -1,58 +1,83 @@
-@{
-    ViewData["Title"] = "Chat";
-}
 
+var usercolorobj = {};
+var count = 0;
+var color = ["red", "green", "blue", "purple", "darkgold", "black", "orange", "dodgerblue", "violet", "tomato", "magenta"];
+$(document).ready(function(){
+    console.log("Ready Whiteboard");
+    const connection = new signalR.HubConnection(
+        "/chat", { logger: signalR.LogLevel.Information });
 
-    <h1 class="main-header">Pick a Game Room</h1>
-    <hr />
-    
-        <div class="row">
-            <span class="buffering"><a class="btn btn-lg wide btn-primary" role="button" href="/MainRoom2">Main Room</a></span>
-            <span class="buffering"><a class="btn btn-lg wide btn-warning" role="button" href="">Earth Defender Room</a></span>
-            <span class="buffering"><a class="btn btn-lg wide btn-danger" role="button" href="/MoveShape">Move Shape Room</a></span>
-        </div>
-        <div class="row">
-            <span class="buffering"><a class="btn btn-lg wide btn-info" role="button" href="/Draw">WhiteBoard Room</a></span>
-            <span class="buffering"><a class="btn btn-lg wide btn-success" role="button" href="/treegrowing">Tree Growing Room</a></span>
-            <span class="buffering"><a class="btn btn-lg wide btn-default" role="button" href="">Snail Race Room</a></span>
-        </div>
-    
-    <br>
+    connection.start().catch(
+        err => appendLine(err, 'red')
+    );
 
-<!-- added some simple bootstrap styling -->
-<div class="row" id="msgTop">
-    <div class="col-sm-8 col-md-8">
-        <h3 class="text-primary">Messages</h3>
-    </div>
-    <div class="col-sm-4 col-md-3">
-        <h3 class="text-top">Users Logged-in</h3>
-    </div>
-</div>
+    $("#canvas").mouseout(function(){
+        clearMousePositions();
+    });
 
-<div class="row" id="chat-area">
-    <div class="col-sm-8 col-md-8 chat-box" id="msg-box"><p id="messages"></p></div>
-    <div class="col-sm-4 col-md-4 chat-box"><p id="users"></p></div>
-    <div class="clear"></div>
-</div>
-    <br>
-    <form id="sendmessage" class="form-inline my-2 my-lg-0" action="#">
-        <div class="col-sm-8 col-md-8 aligned"><input class="form-control" type="text" id="new-message"></div>
-        <div class="col-sm-4 col-md-4 aligned"><button type="submit" id="send" class="btn btn-success btn-lg send">Send</button></div>
-    </form>
-<script src="~/lib/signalr/signalr.js"></script>
-<script>
-// let transportType = signalR.HttpTransportType[getParameterByName('transport')] || signalR.HttpTransportType.WebSockets;
-// let connection = new signalR.HubConnectionBuilder()
-//   .configureLogging(signalR.LogLevel.Information)
-//    .withUrl("/chat", transportType)
-//    .build();
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+    var canvasx = $(canvas).offset().left;
+    var canvasy = $(canvas).offset().top;
+    var last_mousex = last_mousey = 0;
+    var mousex = mousey = 0;
+    var mousedown = false;
+    var tooltype = 'draw';
+
+    $(canvas).on('mousedown', function (e) {
+        last_mousex = mousex = parseInt(e.clientX - canvasx);
+        last_mousey = mousey = parseInt(e.clientY - canvasy);
+        mousedown = true;
+    });
+
+    $(canvas).on('mouseup', function (e) {
+        mousedown = false;
+    });
+
+    var drawCanvas = function (prev_x, prev_y, x, y, clr) {
+        ctx.beginPath();
+        console.log("X: " + x + " Y: " + y);
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.strokeStyle = clr
+        ctx.lineWidth = 3;
+        ctx.moveTo(prev_x, prev_y);
+        ctx.lineTo(x, y);
+        ctx.lineJoin = ctx.lineCap = 'round';
+        ctx.stroke();
+    };
+
+    $(canvas).on('mousemove', function (e) {
+        mousex = parseInt(e.clientX - canvasx);
+        mousey = parseInt(e.clientY - canvasy);
+        var clr = $('select[id=color]').val()
+
+        if ((last_mousex > 0 && last_mousey > 0) && mousedown) {
+            drawCanvas(mousex, mousey, last_mousex, last_mousey, clr);
+            connection.invoke('Draw', last_mousex, last_mousey, mousex, mousey, clr);
+        }
+        last_mousex = mousex;
+        last_mousey = mousey;
+
+        $('#output').html('current: ' + mousex + ', ' + mousey + '<br/>last: ' + last_mousex + ', ' + last_mousey + '<br/>mousedown: ' + mousedown);
+    });
+
+    var mouse_down = false;
+
+    // const connection = new signalR.HubConnection('/chat', { logger: signalR.LogLevel.Information });
+    connection.on('draw', function (prev_x, prev_y, x, y, clr) {
+        console.log("X: " + x + " Y: " + y);
+        drawCanvas(prev_x, prev_y, x, y, clr);
+    });
+
+    clearMousePositions = function () {
+        last_mousex = 0;
+        last_mousey = 0;
+    }
+
     var usercolorobj = {};
     var count = 0;
     var color = ["red", "green", "blue", "purple", "darkgold", "black", "orange", "dodgerblue", "violet", "tomato", "magenta"];
     
-    const connection = new signalR.HubConnection(
-        "/chat", { logger: signalR.LogLevel.Information });
-
     connection.onclose(e => {
         if (e) {
             appendLine('Connection closed with error: ' + e, 'red');
@@ -68,14 +93,14 @@
 
     connection.on('UsersJoined', users => {
         users.forEach(user => {
-            appendLine('User ' + user.name + ' joined the chat', 'green');
+            appendLine('' + user.name + ' joined the Room', 'green');
             addUserOnline(user);
         });
     });
 
     connection.on('UsersLeft', users => {
         users.forEach(user => {
-            appendLine('User ' + user.name + ' left the chat', 'red');
+            appendLine('' + user.name + ' left the Room', 'red');
             document.getElementById(user.connectionId).outerHTML = '';
         });
     });
@@ -105,7 +130,6 @@
         ClearMessage();
     });
 
-    connection.start().catch(err => appendLine(err, 'red'));
 
     document.getElementById('sendmessage').addEventListener('submit', event => {
         let data = document.getElementById('new-message').value;
@@ -129,7 +153,7 @@
         var userLi = document.createElement('p');
         userLi.innerText = `${user.name}`;
         userLi.id = user.connectionId;
-        while(count<color.length){
+        while(count < color.length){
         var usercolor = color[count];
         userLi.style.color = usercolor;
         usercolorobj[user.name] = usercolor;
@@ -157,4 +181,4 @@
         document.getElementById('new-message').value = "";
     }
 
-</script>
+});

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using SocialLogin;
+using SocialLogin.Models;
+using Newtonsoft.Json;
+
 namespace SocialLogin.Hubs
 {
     [Authorize]
@@ -56,17 +59,17 @@ namespace SocialLogin.Hubs
             width = isRight ? width + 10 : width - 10;
             await Clients.All.SendAsync("increaseBarClient", width);
         }
-        // Grow Tree
-        public async Task GrowTreeWidth(int width, bool isRight)
-        {
-            width = isRight ? width + 8 : width - 0;
-            await Clients.All.SendAsync("GrowTreeWidthClient", width);
-        }
-        public async Task GrowTreeHeight(int height, bool isRight)
-        {
-            height = isRight ? height + 10 : height - 0;
-            await Clients.All.SendAsync("GrowTreeHeightClient", height);
-        }
+        // Grow Tree, context.User.Identity.Name: GrowWidth and
+        // public async Task GrowTreeWidth(int width, bool isRight)
+        // {
+        //     width = isRight ? width + 8 : width - 0;
+        //     await Clients.All.SendAsync("GrowTreeWidthClient", width, Context.User.Identity.Name);
+        // }
+        // public async Task GrowTreeHeight(int height, bool isRight)
+        // {
+        //     height = isRight ? height + 10 : height - 0;
+        //     await Clients.All.SendAsync("GrowTreeHeightClient", height);
+        // }
         // 
         public Task SendMessageToCaller(string message)
         {
@@ -91,9 +94,20 @@ namespace SocialLogin.Hubs
             await Clients.Others.SendAsync("shapeMoved", x, y);
         }
 
-        public Task Draw(int prevX, int prevY, int currentX, int currentY, string color)
+        public async Task UpdateGameState(GameState gameState )
         {
-            return Clients.Others.SendAsync("draw", prevX, prevY, currentX, currentY, color);
+            System.Console.WriteLine();
+
+            System.Console.WriteLine(gameState.shipName);
+            System.Console.WriteLine(gameState.currentScore);
+            System.Console.WriteLine(gameState.destroyedAsteroid);
+            System.Console.WriteLine();
+            await Clients.All.SendAsync("getGameState", JsonConvert.SerializeObject(gameState));
+        }
+
+        public async Task Draw(int prevX, int prevY, int currentX, int currentY, string color)
+        {
+            await Clients.Others.SendAsync("draw", prevX, prevY, currentX, currentY, color);
         }
     }
 }

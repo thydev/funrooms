@@ -1,0 +1,49 @@
+﻿
+    <style>
+        canvas {
+            cursor: crosshair;
+            border: 2px double #636363;
+        }
+    </style>
+
+<hr />
+<div class="row">
+    <div class="col-12">
+        <canvas id="canvas" width="800" height="500" ></canvas>
+    </div>
+</div>
+
+<div class="row" id="chat-area">
+    <div class="col-sm-8 col-md-8">
+        <p id="messages"></p>
+    </div>
+    <div class="col-sm-4 col-md-3" style="border-left: solid black 1pt">
+        <p id="users" style="display: static"></p>
+    </div>
+    <div class="clear">
+    </div>
+    <form id="sendmessage" action="#">
+        <div class="col-sm-8 col-md-8"><br>
+            <input class="form-control" type="text" id="new-message">
+        </div>
+        <div class="col-sm-3 col-md-3"><br>
+        <button type="submit" id="send" class="send btn btn-success btn-block col-sm-4 col-md-4">Send</button>
+        </div>
+    </form>
+</div>
+
+    <div class="col-sm-4 col-md-3">
+        <p id="users" style="display: static"></p>
+    </div>
+    <select id="color">
+        <option value="black">Black</option>
+        <option value="red">Red</option>
+        <option value="yellow">Yellow</option>
+        <option value="green">Green</option>
+        <option value="blue">Blue</option>
+    </select>
+    <div id="output"></div>
+    <script src="~/lib/signalr/signalr.js"></script>
+    <script src="~/js/gest.js"></script>
+    <script src="~/js/whiteboard.js"></script>
+    

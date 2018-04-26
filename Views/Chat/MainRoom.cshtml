@@ -1,0 +1,161 @@
+@{
+    ViewData["Title"] = "Chat";
+}
+
+
+    <h1 class="main-header">Pick a Game Room</h1>
+    <hr />
+    
+        <div class="row">
+            <span class="buffering"><a class="btn btn-lg wide btn-primary" role="button" asp-controller="EarthDefender" asp-action="EarthDefenderSingle">Earth Defender - 1p</a></span>
+            <span class="buffering"><a class="btn btn-lg wide btn-warning" role="button" asp-controller="EarthDefender" asp-action="EarthDefenderMulti">Earth Defender - multiplayer</a></span>
+            <span class="buffering"><a class="btn btn-lg wide btn-danger" role="button" asp-controller="MoveShape" asp-action="MoveShapeRoom">Move Shape Room</a></span>
+        </div>
+        <div class="row">
+            <span class="buffering"><a class="btn btn-lg wide btn-info" role="button" asp-controller="WhiteBoard" asp-action="WhiteBoardRoom">WhiteBoard Room</a></span>
+            <span class="buffering"><a class="btn btn-lg wide btn-success" role="button" asp-controller="TreeGrowing" asp-action="TreeGrowingRoom">Tree Growing Room</a></span>
+            <span class="buffering"><a class="btn btn-lg wide btn-default" role="button" asp-controller="SnailRacing" asp-action="SnailRacingRoom">Snail Race Room</a></span>
+        </div>
+    
+<!-- added some simple bootstrap styling -->
+<div class="row" id="msgTop">
+    <div class="col-sm-8 col-md-8">
+        <h3 class="text-primary">Messages</h3>
+    </div>
+    <div class="col-sm-4 col-md-3">
+        <h3 class="text-top">Users Logged-in</h3>
+    </div>
+</div>
+
+<div class="row" id="chat-area">
+    <div class="col-sm-8 col-md-8 chat-box" id="msg-box"><p id="messages"></p></div>
+    <div class="col-sm-4 col-md-4 chat-box"><p id="users"></p></div>
+    <div class="clear"></div>
+</div>
+    <br>
+    <form id="sendmessage" class="form-inline my-2 my-lg-0" action="#">
+        <div class="col-sm-8 col-md-8 aligned"><input class="form-control" type="text" id="new-message"></div>
+        <div class="col-sm-4 col-md-4 aligned"><button type="submit" id="send" class="btn btn-success btn-lg send">Send</button></div>
+    </form>
+<script src="~/lib/signalr/signalr.js"></script>
+<script>
+// let transportType = signalR.HttpTransportType[getParameterByName('transport')] || signalR.HttpTransportType.WebSockets;
+// let connection = new signalR.HubConnectionBuilder()
+//   .configureLogging(signalR.LogLevel.Information)
+//    .withUrl("/chat", transportType)
+//    .build();
+    var usercolorobj = {};
+    var count = 0;
+    var color = ["darkred", "darkolivegreen", "blue", "purple", "darkgold", "black", "orange", "dodgerblue", "violet", "tomato", "magenta"];
+    
+    const connection = new signalR.HubConnection("/chat", 
+        { logger: signalR.LogLevel.Information });
+
+    connection.start()
+        .catch(err => appendLine(err, rgb(255, 0, 0)));
+
+    connection.onclose(e => {
+        if (e) {
+            appendLine('Connection closed with error: ' + e, rgb(255, 0, 0));
+        }
+        else {
+            appendLine('Disconnected', rgb(0, 200, 0));
+        }
+    });
+
+    connection.on('SetUsersOnline', usersOnline => {
+        usersOnline.forEach(user => addUserOnline(user));
+    });
+
+    connection.on('UsersJoined', users => {
+        users.forEach(user => {
+            appendLine('User ' + user.name + ' joined the Room', rgb(0, 200, 0));
+            addUserOnline(user);
+        });
+    });
+
+    connection.on('UsersLeft', users => {
+        users.forEach(user => {
+            appendLine('User ' + user.name + ' left the Room', rgb(255, 0, 0));
+            document.getElementById(user.connectionId).outerHTML = '';
+        });
+    });
+
+    connection.on('Send', (userName, message) => {
+        var nameElement = document.createElement('b');
+        nameElement.innerText = userName + ':';
+        for(var key in usercolorobj){
+            if(key == userName){
+                nameElement.style.color = usercolorobj[key];
+                break;
+            }
+        }
+        var msgElement = document.createElement('span');
+        msgElement.innerText = ' ' + message;
+        //added in datetime for when message created.
+        var now = new Date();
+        var msgTimestamp = document.createElement('p');
+        msgTimestamp.className = "pull-right";
+        msgTimestamp.innerText = ' ~ ' + now.toLocaleString();
+
+        var child = document.createElement('p');
+        child.appendChild(nameElement);
+        child.appendChild(msgElement);
+        child.appendChild(msgTimestamp);
+        document.getElementById('messages').appendChild(child);
+        ClearMessage();
+    });
+
+    
+
+    document.getElementById('sendmessage').addEventListener('submit', event => {
+        let data = document.getElementById('new-message').value;
+        connection.invoke('Send', data).catch(err => appendLine(err, rgb(255, 0, 0)));
+        event.preventDefault();
+    });
+
+    function appendLine(line, color) {
+        let child = document.createElement('p');
+        if (color) {
+            child.style.color = color;
+        }
+        child.innerText = line;
+        document.getElementById('messages').appendChild(child);
+    };
+
+    function addUserOnline(user) {
+        if (document.getElementById(user.connectionId)) {
+            return;
+        }
+        var userLi = document.createElement('p');
+        userLi.innerText = `${user.name}`;
+        userLi.id = user.connectionId;
+        while(count<color.length){
+        var usercolor = color[count];
+        userLi.style.color = usercolor;
+        usercolorobj[user.name] = usercolor;
+            count++;
+            if(count == 10){
+                count = 0;
+            }
+            break;
+        }
+        document.getElementById('users').appendChild(userLi);
+    }
+
+    function getParameterByName(name, url) {
+        if (!url) {
+            url = window.location.href;
+        }
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    };
+    function ClearMessage(){
+        document.getElementById('new-message').value = "";
+    }
+
+</script>
