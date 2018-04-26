@@ -9,7 +9,7 @@ var graphicAssets = {
     asteroidMedium:{URL:assetUrl + 'asteroidMedium2.png', name:'asteroidMedium'},
     asteroidSmall:{URL:assetUrl + 'asteroidSmall2.png', name:'asteroidSmall'},
 
-    background:{URL:assetUrl + 'background2.jpg', name:'background'},
+    background:{URL:assetUrl + 'background3.jpg', name:'background'},
     explosionLarge:{URL:assetUrl + 'explosionLarge.png', name:'explosionLarge', width:64, height:64, frames:8},
     explosionMedium:{URL:assetUrl + 'explosionMedium.png', name:'explosionMedium', width:58, height:58, frames:8},
     explosionSmall:{URL:assetUrl + 'explosionSmall.png', name:'explosionSmall', width:41, height:41, frames:8},
@@ -22,8 +22,8 @@ var soundAssets = {
 };
 
 var gameProperties = {
-    screenWidth: 640,
-    screenHeight: 480,
+    screenWidth: 940,
+    screenHeight: 680,
     delayToStartLevel: 3,
     padding: 30,
 };
@@ -47,7 +47,7 @@ var shipProperties = {
     maxVelocity: 300,
     angularVelocity: 200,
 
-    startingLives: 3, // Will change to 
+    startingLives: 0, // Will change to 
     timeToReset: 3,
     blinkDelay: 0.2,
 };
@@ -79,9 +79,9 @@ var asteroidProperties = {
     // maxAngularVelocity : the maximum rotation velocity of the asteroid
     // score : the points the player earns when the asteroid is destroyed
     // nextSize : the next asteroid size to appear when the current asteroid is destroyed. If there is no value give, no asteroid will appear after the asteroid is destroyed
-    asteroidLarge: { minVelocity: 50, maxVelocity: 150, minAngularVelocity: 0, maxAngularVelocity: 200, score: 20, nextSize: graphicAssets.asteroidMedium.name, pieces: 2, explosion:'explosionLarge' },
-    asteroidMedium: { minVelocity: 50, maxVelocity: 200, minAngularVelocity: 0, maxAngularVelocity: 200, score: 50, nextSize: graphicAssets.asteroidSmall.name, pieces: 2, explosion:'explosionMedium' },
-    asteroidSmall: { minVelocity: 50, maxVelocity: 300, minAngularVelocity: 0, maxAngularVelocity: 200, score: 100, explosion:'explosionSmall' },
+    asteroidLarge: { minVelocity: 50, maxVelocity: 150, minAngularVelocity: 0, maxAngularVelocity: 200, score: 1, nextSize: graphicAssets.asteroidMedium.name, pieces: 2, explosion:'explosionLarge' },
+    asteroidMedium: { minVelocity: 50, maxVelocity: 200, minAngularVelocity: 0, maxAngularVelocity: 200, score: 1, nextSize: graphicAssets.asteroidSmall.name, pieces: 2, explosion:'explosionMedium' },
+    asteroidSmall: { minVelocity: 50, maxVelocity: 300, minAngularVelocity: 0, maxAngularVelocity: 200, score: 1, explosion:'explosionSmall' },
 };
 
 var fontAssets = {
@@ -177,6 +177,7 @@ gameState.prototype = {
 
     initGraphics: function () {
         this.backgroundSprite = game.add.sprite(0, 0, graphicAssets.background.name);
+        this.backgroundSprite.scale.setTo(0.7, 0.7);
         //make our sprite appear on screen at the specified x and y positions
         // x: the x coordinate of the sprite
         // y: the y coordinate of the sprite
