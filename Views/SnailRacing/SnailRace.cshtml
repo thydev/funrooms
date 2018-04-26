@@ -1,8 +1,8 @@
 
-<h1 class="GameTitle">Growing Tree Room</h1>
+<h1>Welcome to the Snail Racing Room</h1>
 <div id="gestdirection">
     <h2>Directions:</h2>
-    <h4>Wave Hand Up to Grow Tree</h4>
+    <h4>Wave Hand To Right To Move Snail</h4>
 </div>
 <div class="row">
     <div id="users"></div>
@@ -16,8 +16,7 @@
 </div>
 
 <div id="container">
-    <!-- tree room items are in treecontainer div -->
-    <div id="treecontainer" class="row"></div>
+    <div id="snailcontainer" class="row"></div>
 </div>
 
 <script src="~/lib/signalr/signalr.js"></script>
@@ -28,7 +27,6 @@
     var color = ["red", "green", "blue", "purple", "darkgold", "black", "orange", "dodgerblue", "violet", "tomato", "magenta"];
     $(document).ready(function(){
         var userid = {};
-        var thisplayer = "";
         //gspc = game start push count
         var gspc = 0;
         $("#gestdirection").hide();
@@ -40,21 +38,21 @@
         var usercount = 0;
         //hide start game button until 2 players are in lobby
         console.log("ready");
-        const treehub = new signalR.HubConnection(
-            "/growingtree", { logger: signalR.LogLevel.Information });
+        const snailhub = new signalR.HubConnection(
+            "/snailrace", { logger: signalR.LogLevel.Information });
 
         //////// Testing below for 2 player
-        treehub.on('SetUsersOnline', usersOnline => {
+        snailhub.on('SetUsersOnline', usersOnline => {
             usersOnline.forEach(user => addUserOnline(user));
         });
 //
-        treehub.on('UsersJoined', users => {
+        snailhub.on('UsersJoined', users => {
             users.forEach(user => {
                 addUserOnline(user);
             });
         });
 
-        treehub.on('UsersLeft', users => {
+        snailhub.on('UsersLeft', users => {
             users.forEach(user => {
                 document.getElementById(user.name).outerHTML = '';
                 var user = userid[user.name];
@@ -66,12 +64,12 @@
             gspc--;
             console.log(usercount);
             if(usercount<2){
-                window.location.href = "/treegrowing";
+                window.location.href = "/SnailRacing";
             }
         });
 
-//use code below to send messages to other player in room, just need html to add messages, may need more C# async's
-        treehub.on('Send', (userName) => {
+//use code below to send messages to other player in room
+        snailhub.on('Send', (userName) => {
             console.log(userName);
             var nameElement = document.createElement('b');
             nameElement.innerText = userName + '   ';
@@ -86,31 +84,31 @@
             child.appendChild(nameElement);
             document.getElementById('users').appendChild(child);
         });
-        ///
-        treehub.on("GrowTreeWidthClient", (width, height, userName) => {
+        snailhub.on("SnailMoveClient", (width, height, userName) => {
             console.log(userName);
+            
             var connectid = userid[userName];
             console.log("growth id",connectid);
             console.log($(connectid));
             $("#"+connectid).width(width);
             $("#"+connectid).height(height);
-            thisplayer = connectid;
+            var playerheight = $("#"+connectid).height(height);
+            console.log("playerheight", playerheight)
             console.log(height);
+            var thisplayer = document.getElementById(connectid).style.height;
+            console.log("thisplayer type px",typeof(thisplayer));
             if(height == 400){
                 //instead of display only one score display both scores, append to html
-                treehub.stop();
-                GameScore();
-            }
-        });
-        function GameScore(){
-            console.log("thisplayer", thisplayer);
-            for(var player in userid){
-                if(thisplayer == userid[player]){
-                    $("#container").html("<div class='text-center'><h1>Game Over" +" "+player+" Wins</h1><p><a class='btn btn-success' role='button' href='/treegrowing'>Play Again?</a></p></div>");
+                if(document.getElementById(connectid).style.height != "400px"){
+                    $("#container").html("<div class='text-center'><h1>Game Over You Lost</h1><p><a class='btn btn-success' role='button' href='/SnailRacing'>Play Again?</a></p></div>");
                 }
+                else{
+                    $("#container").html("<div class='text-center'><h1>Game Over You Win!!</h1><p><a class='btn btn-success' role='button' href='/SnailRacing'>Play Again?</a></p></div>");
+                }
+                snailhub.stop();
             }
-        } 
-        treehub.on("StartGameClient", (pushcount) =>{
+        }); 
+        snailhub.on("StartGameClient", (pushcount) =>{
             gspc = pushcount;
             console.log("gspc", gspc);
             if(gspc == 2){
@@ -120,7 +118,7 @@
                 $("#waiting").hide();
             }
         });
-        treehub.start();
+        snailhub.start();
         gest.options.subscribeWithCallback(function(gesture) {
             var message = '';
             console.log(gesture.direction);
@@ -133,7 +131,7 @@
                 console.log($($tree).width());
                 console.log($($tree).height());
                 if (gesture.up) {
-                    treehub.invoke("GrowTreeWidth", $($tree).width(), $($tree).height(), gesture.up)
+                    snailhub.invoke("SnailMove", $($tree).width(), $($tree).height(), gesture.up)
                         .catch(err => console.error);
                 }
             } else {
@@ -161,7 +159,6 @@
             var userLi = document.createElement('h3');
             userLi.innerText = `${user.name}`;
             userLi.id = user.name;
-            //below is class name for user email when added to this room change col-md-6
             userLi.className = "col-md-6 text-center";
             while(count<color.length){
             var usercolor = color[count];
@@ -174,29 +171,34 @@
                 }
                 break;
             }
+            //while(usercount<)
             var treediv = document.createElement('div');
-            //below is class name for user treepic added to this page change col-md-6
             treediv.className = "col-md-6";
             var treepic = document.createElement('img');
             treepic.id = user.connectionId;
             treepic.className = "tree center";
-            treepic.src = "/images/palmtree.png";
+            treepic.src = "/images/pine-tree-b.jpg";
             treepic.width = "80";
             treepic.height = "100";
             treediv.appendChild(treepic);
-            document.getElementById("treecontainer").appendChild(treediv);
+            document.getElementById("snailcontainer").appendChild(treediv);
 
             document.getElementById('users').appendChild(userLi);
         }
         $(".gamestart").click(function(e){
-            //testing invoke below, now works
+            //testing invoke below
             if(usercount > 1){
-                treehub.invoke("StartGame", gspc)
+                snailhub.invoke("StartGame", gspc)
                 console.log("gamestartinvoked");
                 $(".newgame").hide();
                 $("#waiting").show();
             }
+            
+            //gest.start();
+            //console.log("started");
+            //e.preventDefault();
+            //$("#container").show();
+            //$(".newgame").hide();
         });
-
     });
 </script>
