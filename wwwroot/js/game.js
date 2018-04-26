@@ -2,14 +2,14 @@
 var assetUrl = "images/edassets/";
 // Loading assets
 var graphicAssets = {
-    ship:{URL: assetUrl + 'ship.png', name:'ship'},
-    bullet:{URL:assetUrl + 'bullet.png', name:'bullet'},    
+    ship:{URL: assetUrl + 'ship3.png', name:'ship', width:60, height:60},
+    bullet:{URL:assetUrl + 'bullet3.png', name:'bullet'},    
     
-    asteroidLarge:{URL:assetUrl + 'asteroidLarge.png', name:'asteroidLarge'},
-    asteroidMedium:{URL:assetUrl + 'asteroidMedium.png', name:'asteroidMedium'},
-    asteroidSmall:{URL:assetUrl + 'asteroidSmall.png', name:'asteroidSmall'},
+    asteroidLarge:{URL:assetUrl + 'asteroidLarge2.png', name:'asteroidLarge'},
+    asteroidMedium:{URL:assetUrl + 'asteroidMedium2.png', name:'asteroidMedium'},
+    asteroidSmall:{URL:assetUrl + 'asteroidSmall2.png', name:'asteroidSmall'},
 
-    background:{URL:assetUrl + 'background.png', name:'background'},
+    background:{URL:assetUrl + 'background2.jpg', name:'background'},
     explosionLarge:{URL:assetUrl + 'explosionLarge.png', name:'explosionLarge', width:64, height:64, frames:8},
     explosionMedium:{URL:assetUrl + 'explosionMedium.png', name:'explosionMedium', width:58, height:58, frames:8},
     explosionSmall:{URL:assetUrl + 'explosionSmall.png', name:'explosionSmall', width:41, height:41, frames:8},
@@ -182,6 +182,7 @@ gameState.prototype = {
         // y: the y coordinate of the sprite
         // key: the image used as a texture by this display object
         this.shipSprite = game.add.sprite(shipProperties.startX, shipProperties.startY, graphicAssets.ship.name);
+        this.shipSprite.scale.setTo(0.07, 0.07);
         // By default, at 0 degrees rotation, a sprite always faces right. We will want our sprite to be facing upwards so we set the angle to -90 degrees
         this.shipSprite.angle = -90;
         // to ensure that our sprite rotates along the correct centre point, we set it’s anchor to 50% of its width and height
