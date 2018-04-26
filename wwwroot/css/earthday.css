@@ -1,0 +1,50 @@
+.main-header {
+    color: white;
+    margin-top: 10px;
+    text-align: center;
+}
+
+hr {
+    border: 1px solid white;
+}
+
+.wide {
+    width: 200px;
+    margin: 10px;
+}
+
+.buffering {
+    margin-left: 75px;
+}
+
+.btn-default {
+    color: #fff;
+    background-color: #e26b26;
+    border-color: #e26b26;   
+}
+
+
+#brandLogo {
+    height: 100px;
+    border: 1px solid transparent;
+    border-radius: 50px;
+}
+
+#shapeContainer {
+    width: 1000px;
+    height: 700px;
+}
+
+.GameTitle {
+    color: white;
+    text-align: center;
+}
+#output {
+    float: right;
+    margin-top: -35px;
+    margin-right: 30px;
+}
+.canvasContainer {
+    width: 825px;
+    margin: auto;
+}

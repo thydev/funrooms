@@ -2,46 +2,43 @@
     ViewData["Title"] = "Chat";
 }
 
-<div class="row">
-    <h2  style="border-bottom: 1pt solid black">Pick a Game Room</h2>
-    <div class="col-sm-10 col-md-10">
-        <div class="col-sm-5 col-md-4"><a class="btn btn-lg btn-primary" style="margin-bottom: 10px" role="button" href="/MainRoom2">Main Room</a></div>
-        <div class="col-sm-5 col-md-4" style="margin-bottom: 10px"><a class="btn btn-lg btn-warning" role="button" href="">Earth Defender Room</a></div>
-        <div class="col-sm-5 col-md-4" style="margin-bottom: 10px"><a class="btn btn-lg btn-danger" role="button" href="/MoveShape">Move Shape Room</a></div>
-        <div class="col-sm-5 col-md-4" style="margin-bottom: 10px"><a class="btn btn-lg btn-info" role="button" href="/Draw">WhiteBoard Room</a></div>
-        <div class="col-sm-5 col-md-4" style="margin-bottom: 10px"><a class="btn btn-lg btn-success" role="button" href="/treegrowing">Tree Growing Room</a></div>
-        <div class="col-sm-5 col-md-4" style="margin-bottom: 10px"><a class="btn btn-lg btn-default" role="button" href="">Snail Race Room</a></div>
-    </div>
+
+    <h1 class="main-header">Pick a Game Room</h1>
+    <hr />
+    
+        <div class="row">
+            <span class="buffering"><a class="btn btn-lg wide btn-primary" role="button" href="/MainRoom2">Main Room</a></span>
+            <span class="buffering"><a class="btn btn-lg wide btn-warning" role="button" href="">Earth Defender Room</a></span>
+            <span class="buffering"><a class="btn btn-lg wide btn-danger" role="button" href="/MoveShape">Move Shape Room</a></span>
+        </div>
+        <div class="row">
+            <span class="buffering"><a class="btn btn-lg wide btn-info" role="button" href="/Draw">WhiteBoard Room</a></span>
+            <span class="buffering"><a class="btn btn-lg wide btn-success" role="button" href="/treegrowing">Tree Growing Room</a></span>
+            <span class="buffering"><a class="btn btn-lg wide btn-default" role="button" href="">Snail Race Room</a></span>
+        </div>
+    
     <br>
-</div>
+
 <!-- added some simple bootstrap styling -->
-<div class="row">
-    <div class="col-sm-8 col-md-8" style="border-bottom: solid black 2pt">
+<div class="row" id="msgTop">
+    <div class="col-sm-8 col-md-8">
         <h3 class="text-primary">Messages</h3>
     </div>
-    <div class="col-sm-4 col-md-3" style="border-bottom: solid black 2pt">
-        <h3 class="text-success text-top">Users Logged-in</h3>
+    <div class="col-sm-4 col-md-3">
+        <h3 class="text-top">Users Logged-in</h3>
     </div>
 </div>
 
 <div class="row" id="chat-area">
-    <div class="col-sm-8 col-md-8">
-        <p id="messages"></p>
-    </div>
-    <div class="col-sm-4 col-md-3" style="border-left: solid black 1pt">
-        <p id="users" style="display: static"></p>
-    </div>
-    <div class="clear">
-    </div>
-    <form id="sendmessage" action="#">
-        <div class="col-sm-8 col-md-8"><br>
-            <input class="form-control" type="text" id="new-message">
-        </div>
-        <div class="col-sm-3 col-md-3"><br>
-        <button type="submit" id="send" class="send btn btn-success btn-block col-sm-4 col-md-4">Send</button>
-        </div>
-    </form>
+    <div class="col-sm-8 col-md-8 chat-box" id="msg-box"><p id="messages"></p></div>
+    <div class="col-sm-4 col-md-4 chat-box"><p id="users"></p></div>
+    <div class="clear"></div>
 </div>
+    <br>
+    <form id="sendmessage" class="form-inline my-2 my-lg-0" action="#">
+        <div class="col-sm-8 col-md-8 aligned"><input class="form-control" type="text" id="new-message"></div>
+        <div class="col-sm-4 col-md-4 aligned"><button type="submit" id="send" class="btn btn-success btn-lg send">Send</button></div>
+    </form>
 <script src="~/lib/signalr/signalr.js"></script>
 <script>
 // let transportType = signalR.HttpTransportType[getParameterByName('transport')] || signalR.HttpTransportType.WebSockets;
