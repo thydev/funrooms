@@ -54,8 +54,11 @@
     var count = 0;
     var color = ["red", "green", "blue", "purple", "darkgold", "black", "orange", "dodgerblue", "violet", "tomato", "magenta"];
     
-    const connection = new signalR.HubConnection(
-        "/chat", { logger: signalR.LogLevel.Information });
+    const connection = new signalR.HubConnection("/chat", 
+        { logger: signalR.LogLevel.Information });
+
+    connection.start()
+        .catch(err => appendLine(err, 'red'));
 
     connection.onclose(e => {
         if (e) {
@@ -72,14 +75,14 @@
 
     connection.on('UsersJoined', users => {
         users.forEach(user => {
-            appendLine('User ' + user.name + ' joined the chat', 'green');
+            appendLine('User ' + user.name + ' joined the Room', 'green');
             addUserOnline(user);
         });
     });
 
     connection.on('UsersLeft', users => {
         users.forEach(user => {
-            appendLine('User ' + user.name + ' left the chat', 'red');
+            appendLine('User ' + user.name + ' left the Room', 'red');
             document.getElementById(user.connectionId).outerHTML = '';
         });
     });
@@ -109,7 +112,7 @@
         ClearMessage();
     });
 
-    connection.start().catch(err => appendLine(err, 'red'));
+    
 
     document.getElementById('sendmessage').addEventListener('submit', event => {
         let data = document.getElementById('new-message').value;

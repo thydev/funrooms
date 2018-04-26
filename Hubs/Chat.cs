@@ -104,5 +104,10 @@ namespace SocialLogin.Hubs
             System.Console.WriteLine();
             await Clients.All.SendAsync("getGameState", JsonConvert.SerializeObject(gameState));
         }
+
+        public async Task Draw(int prevX, int prevY, int currentX, int currentY, string color)
+        {
+            await Clients.Others.SendAsync("draw", prevX, prevY, currentX, currentY, color);
+        }
     }
 }

@@ -151,7 +151,7 @@ namespace SocialLogin
                 // routes.MapHub<ChatHub>("/chathub");
                 routes.MapHub<Chat>("/chat");
                 routes.MapHub<GrowingTree>("/growingtree");
-                routes.MapHub<GrowingTree>("/whiteboard");
+                // routes.MapHub<WhiteBoardHub>("/whiteboard");
                 // routes.MapHub<ChatHub>("/chathub");
                 // routes.MapHub<ShapeHub>("/moveshape");
             });
