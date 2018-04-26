@@ -27,15 +27,17 @@ namespace SocialLogin.Hubs
         }
         public async Task Counter(int counting)
         {
+            System.Console.WriteLine(counting);
             counting++;
-            await Clients.All.SendAsync("CounterClient", counting);
+            System.Console.WriteLine("Counting");
+            System.Console.WriteLine(counting);
+            await Clients.All.SendAsync("CounterClient", counting, Context.User.Identity.Name);
         }
 
         public override Task OnUsersLeft(UserDetails[] users)
         {
             return Clients.Client(Context.ConnectionId).SendAsync("UsersLeft", users);
         }
-        //notes: .All to .Others
         public async Task GrowTreeWidth(int width, int height, bool isRight)
         {
             width = isRight ? width + 8 : width - 0;
@@ -48,9 +50,9 @@ namespace SocialLogin.Hubs
             return Clients.Caller.SendAsync("ReceiveMessage", message + "caller");
         }
         //
-        public async Task StartGame(bool isRight){
-            // e = isRight;
-            await Clients.All.SendAsync("StartGameClient");
+        public async Task StartGame(int pushcount){
+            pushcount++;
+            await Clients.All.SendAsync("StartGameClient", pushcount);
         }
     }
 }
