@@ -7,9 +7,9 @@ using SocialLogin;
 namespace SocialLogin.Hubs
 {
     [Authorize]
-    public class GrowingTree : HubWithPresence
+    public class SnailRace : HubWithPresence
     {
-        public GrowingTree(IUserTracker<GrowingTree> userTracker)
+        public SnailRace(IUserTracker<SnailRace> userTracker)
             : base(userTracker)
         {
 
@@ -25,16 +25,24 @@ namespace SocialLogin.Hubs
             
             return Clients.Client(Context.ConnectionId).SendAsync("UsersJoined", users);
         }
+        //public async Task Counter(int counting)
+        // {
+        //     System.Console.WriteLine(counting);
+        //     counting++;
+        //     System.Console.WriteLine("Counting");
+        //     System.Console.WriteLine(counting);
+        //     await Clients.All.SendAsync("CounterClient", counting, Context.User.Identity.Name);
+        // }
 
         public override Task OnUsersLeft(UserDetails[] users)
         {
             return Clients.Client(Context.ConnectionId).SendAsync("UsersLeft", users);
         }
-        public async Task GrowTreeWidth(int width, int height, bool isRight)
+        public async Task SnailMove(int width, int height, bool isRight)
         {
-            width = isRight ? width + 8 : width - 0;
-            height = isRight ? height + 10 : height - 0;
-            await Clients.All.SendAsync("GrowTreeWidthClient", width, height, Context.User.Identity.Name);
+            // width = isRight ? width + 8 : width - 0;
+            // height = isRight ? height + 10 : height - 0;
+            // await Clients.All.SendAsync("SnailMoveClient", width, height, Context.User.Identity.Name);
         }
         
         public Task SendMessageToCaller(string message)
