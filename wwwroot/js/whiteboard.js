@@ -119,6 +119,8 @@ $(document).ready(function(){
         //added in datetime for when message created.
         var now = new Date();
         var msgTimestamp = document.createElement('p');
+        msgTimestamp.fontcolor = "darkgary";
+        msgTimestamp.style.fontSize ="x-small";
         msgTimestamp.className = "pull-right";
         msgTimestamp.innerText = ' ~ ' + now.toLocaleString();
 
