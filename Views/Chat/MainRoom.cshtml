@@ -52,14 +52,14 @@
         { logger: signalR.LogLevel.Information });
 
     connection.start()
-        .catch(err => appendLine(err, rgb(255, 0, 0)));
+        .catch(err => appendLine(err, "green"));
 
     connection.onclose(e => {
         if (e) {
-            appendLine('Connection closed with error: ' + e, rgb(255, 0, 0));
+            appendLine('Connection closed with error: ' + e, "red");
         }
         else {
-            appendLine('Disconnected', rgb(0, 200, 0));
+            appendLine('Disconnected', "red");
         }
     });
 
@@ -69,14 +69,14 @@
 
     connection.on('UsersJoined', users => {
         users.forEach(user => {
-            appendLine('User ' + user.name + ' joined the Room', rgb(0, 200, 0));
+            appendLine('User ' + user.name + ' joined the Room', "green");
             addUserOnline(user);
         });
     });
 
     connection.on('UsersLeft', users => {
         users.forEach(user => {
-            appendLine('User ' + user.name + ' left the Room', rgb(255, 0, 0));
+            appendLine('User ' + user.name + ' left the Room', "red");
             document.getElementById(user.connectionId).outerHTML = '';
         });
     });
@@ -95,6 +95,8 @@
         //added in datetime for when message created.
         var now = new Date();
         var msgTimestamp = document.createElement('p');
+        msgTimestamp.fontcolor = "darkgary";
+        msgTimestamp.style.fontSize ="x-small";
         msgTimestamp.className = "pull-right";
         msgTimestamp.innerText = ' ~ ' + now.toLocaleString();
 
@@ -110,7 +112,7 @@
 
     document.getElementById('sendmessage').addEventListener('submit', event => {
         let data = document.getElementById('new-message').value;
-        connection.invoke('Send', data).catch(err => appendLine(err, rgb(255, 0, 0)));
+        connection.invoke('Send', data).catch(err => appendLine(err, "red"));
         event.preventDefault();
     });
 
