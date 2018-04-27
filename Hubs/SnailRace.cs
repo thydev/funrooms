@@ -22,27 +22,19 @@ namespace SocialLogin.Hubs
 
         public override Task OnUsersJoined(UserDetails[] users)
         {
-            
+            System.Console.WriteLine("Hit this method");
             return Clients.Client(Context.ConnectionId).SendAsync("UsersJoined", users);
         }
-        //public async Task Counter(int counting)
-        // {
-        //     System.Console.WriteLine(counting);
-        //     counting++;
-        //     System.Console.WriteLine("Counting");
-        //     System.Console.WriteLine(counting);
-        //     await Clients.All.SendAsync("CounterClient", counting, Context.User.Identity.Name);
-        // }
 
         public override Task OnUsersLeft(UserDetails[] users)
         {
             return Clients.Client(Context.ConnectionId).SendAsync("UsersLeft", users);
         }
-        public async Task SnailMove(int width, int height, bool isRight)
+        public async Task SnailMove(int left, bool isRight)
         {
-            // width = isRight ? width + 8 : width - 0;
-            // height = isRight ? height + 10 : height - 0;
-            // await Clients.All.SendAsync("SnailMoveClient", width, height, Context.User.Identity.Name);
+            System.Console.WriteLine(left);
+            left = isRight ? left + 15 : left - 0;
+            await Clients.All.SendAsync("SnailMoveClient", left, Context.User.Identity.Name);
         }
         
         public Task SendMessageToCaller(string message)

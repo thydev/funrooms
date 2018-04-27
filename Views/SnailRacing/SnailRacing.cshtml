@@ -7,16 +7,20 @@
 <div class="row">
     <div id="users"></div>
 </div>
-<h2 id="waiting" class="text-center">Waiting for Other Player to Start...</h2>
+
+<h2 id="waiting" class="text-center">Ready Set...</h2>
 <div class="newgame text-center">
     <br>
-    <h2 class="playtext">Ready to Play?</h2>
-    <h2 class="readytext">Waiting for Another User...</h2>    
+    <h2 class="playtext">Ready to Race?</h2>
+    <h2 class="readytext">Waiting for Another Racer...</h2>    
     <button class="btn btn-lg btn-success gamestart">Start Game</button>
 </div>
 
+
+
 <div id="container">
-    <div id="snailcontainer" class="row"></div>
+    <!-- snail container needs background image of track2 -->
+    <div id="snailcontainer"></div>
 </div>
 
 <script src="~/lib/signalr/signalr.js"></script>
@@ -27,6 +31,7 @@
     var color = ["red", "green", "blue", "purple", "darkgold", "black", "orange", "dodgerblue", "violet", "tomato", "magenta"];
     $(document).ready(function(){
         var userid = {};
+        var thisplayer = "";
         //gspc = game start push count
         var gspc = 0;
         $("#gestdirection").hide();
@@ -34,7 +39,7 @@
         $("#container").hide();
         $(".playtext").hide();
         $(".gamestart").hide();
-        //usercount keeps track of users in tree room
+        //usercount keeps track of users in snail room
         var usercount = 0;
         //hide start game button until 2 players are in lobby
         console.log("ready");
@@ -84,30 +89,31 @@
             child.appendChild(nameElement);
             document.getElementById('users').appendChild(child);
         });
-        snailhub.on("SnailMoveClient", (width, height, userName) => {
+        snailhub.on("SnailMoveClient", (left, userName) => {
             console.log(userName);
-            
+            var marginleft = "";
+            marginleft += left;
+            marginleft += "px";
+            console.log(marginleft);
             var connectid = userid[userName];
-            console.log("growth id",connectid);
+            thisplayer = connectid;
+            console.log("snail id",connectid);
             console.log($(connectid));
-            $("#"+connectid).width(width);
-            $("#"+connectid).height(height);
-            var playerheight = $("#"+connectid).height(height);
-            console.log("playerheight", playerheight)
-            console.log(height);
-            var thisplayer = document.getElementById(connectid).style.height;
-            console.log("thisplayer type px",typeof(thisplayer));
-            if(height == 400){
-                //instead of display only one score display both scores, append to html
-                if(document.getElementById(connectid).style.height != "400px"){
-                    $("#container").html("<div class='text-center'><h1>Game Over You Lost</h1><p><a class='btn btn-success' role='button' href='/SnailRacing'>Play Again?</a></p></div>");
-                }
-                else{
-                    $("#container").html("<div class='text-center'><h1>Game Over You Win!!</h1><p><a class='btn btn-success' role='button' href='/SnailRacing'>Play Again?</a></p></div>");
-                }
+            $("#"+connectid).css("margin-left", marginleft);
+            console.log("left after invoke",left)
+            if(left >= 420){
                 snailhub.stop();
+                Gamescore();
             }
         }); 
+        function Gamescore(){
+            console.log("thisplayer", thisplayer);
+            for(var player in userid){
+                if(thisplayer == userid[player]){
+                    $("#container").html("<div class='text-center'><h1>Game Over" +" "+player+" Wins</h1><p><a class='btn btn-success' role='button' href='/treegrowing'>Play Again?</a></p></div>");
+                }
+            }
+        }
         snailhub.on("StartGameClient", (pushcount) =>{
             gspc = pushcount;
             console.log("gspc", gspc);
@@ -122,22 +128,27 @@
         gest.options.subscribeWithCallback(function(gesture) {
             var message = '';
             console.log(gesture.direction);
-
             if (gesture.direction) {
                 message = gesture.direction;
-                console.log($(".tree"));
-                $tree = $(".tree");
-                console.log($tree);
-                console.log($($tree).width());
-                console.log($($tree).height());
-                if (gesture.up) {
-                    snailhub.invoke("SnailMove", $($tree).width(), $($tree).height(), gesture.up)
+                console.log($(".snail"));
+                $snail = $(".snail");
+                console.log("snail1", $snail);
+                console.log($snail);
+                if(gesture.right){
+                    var marginleft = ($($snail).css("margin-left"));
+
+                    var ml ="";
+                    for(var i = 0; i<marginleft.length-2; i++){
+                        ml += marginleft[i];
+                    }
+                    console.log("marginleft", ml)
+                    console.log(parseInt(ml));
+                    snailhub.invoke("SnailMove", parseInt(ml), gesture.right)
                         .catch(err => console.error);
                 }
             } else {
                 message = gesture.error.message;
             } 
-
         });
         //Testing below:
         function addUserOnline(user) {
@@ -159,30 +170,38 @@
             var userLi = document.createElement('h3');
             userLi.innerText = `${user.name}`;
             userLi.id = user.name;
+            //class for user name once entered room below used bootstrap:
             userLi.className = "col-md-6 text-center";
             while(count<color.length){
-            var usercolor = color[count];
-            userLi.style.color = usercolor;
-            userid[user.name] = user.connectionId;
-            usercolorobj[user.name] = usercolor;
+            // can create image object with url and user name
+                var usercolor = color[count];
+                userLi.style.color = usercolor;
+                userid[user.name] = user.connectionId;
+                usercolorobj[user.name] = usercolor;
                 count++;
                 if(count == 10){
                     count = 0;
                 }
                 break;
             }
-            //while(usercount<)
-            var treediv = document.createElement('div');
-            treediv.className = "col-md-6";
-            var treepic = document.createElement('img');
-            treepic.id = user.connectionId;
-            treepic.className = "tree center";
-            treepic.src = "/images/pine-tree-b.jpg";
-            treepic.width = "80";
-            treepic.height = "100";
-            treediv.appendChild(treepic);
-            document.getElementById("snailcontainer").appendChild(treediv);
-
+            //adjust snail pic and div to seperate snail
+            var snaildiv = document.createElement('div');
+            var snailrow = document.createElement("div");
+            snailrow.className= "snailrow";
+            var snailpic = document.createElement('img');
+            snailpic.id = user.connectionId;
+            snaildiv.className = "row";
+            snaildiv.style.height = "100px";
+            snaildiv.style.display = "block"
+            snailpic.className = "snail";
+            snailpic.style.display = "block"
+            //loop through image array
+            snailpic.src = "/images/SnailBlue.png";
+            snailpic.width = "110";
+            snailpic.height = "80";
+            snaildiv.appendChild(snailrow);
+            snailrow.appendChild(snailpic);
+            document.getElementById("snailcontainer").appendChild(snaildiv);
             document.getElementById('users').appendChild(userLi);
         }
         $(".gamestart").click(function(e){
