@@ -110,7 +110,7 @@
             console.log("thisplayer", thisplayer);
             for(var player in userid){
                 if(thisplayer == userid[player]){
-                    $("#container").html("<div class='text-center'><h1>Game Over" +" "+player+" Wins</h1><p><a class='btn btn-success' role='button' href='/treegrowing'>Play Again?</a></p></div>");
+                    $("#container").html("<div class='text-center'><h1>Game Over" +" "+player+" Wins</h1><p><a class='btn btn-success' role='button' href='/SnailRacing'>Play Again?</a></p></div>");
                 }
             }
         }
@@ -199,6 +199,7 @@
             snailpic.src = "/images/SnailBlue.png";
             snailpic.width = "110";
             snailpic.height = "80";
+            
             snaildiv.appendChild(snailrow);
             snailrow.appendChild(snailpic);
             document.getElementById("snailcontainer").appendChild(snaildiv);
