@@ -56,11 +56,6 @@ hr {
     color: white;
     text-align: center;
 }
-#output {
-    float: right;
-    margin-top: -35px;
-    margin-right: 30px;
-}
 .canvasContainer {
     width: 825px;
     margin: auto;
