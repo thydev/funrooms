@@ -109,7 +109,7 @@
             console.log("thisplayer", thisplayer);
             for(var player in userid){
                 if(thisplayer == userid[player]){
-                    $("#container").html("<div class='text-center'><h1>Game Over" +" "+player+" Wins</h1><p><a class='btn btn-success' role='button' href='/treegrowing'>Play Again?</a></p></div>");
+                    $("#container").html("<div class='GameTitle text-center'><h1>Game Over" +" "+player+" Wins</h1><p><a class='btn btn-success' role='button' href='/treegrowing'>Play Again?</a></p></div>");
                 }
             }
         } 
@@ -182,7 +182,7 @@
             treediv.className = "col-md-6";
             var treepic = document.createElement('img');
             treepic.id = user.connectionId;
-            treepic.className = "tree center";
+            treepic.className = "tree center treeborder";
             treepic.src = "/images/palmtree.png";
             treepic.width = "80";
             treepic.height = "100";

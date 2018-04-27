@@ -1,4 +1,4 @@
-﻿@{
+﻿﻿@{
     ViewData["Title"] = "Whiteboards";
 }
 
@@ -13,9 +13,10 @@
     }
 </style>
 <h1 class="GameTitle">Whiteboard Room</h1>
+<p>Small Resolutions: Ensure you are fully scrolled to top of page to prevent offset drawing with mouse</p>
 
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-8 col-sm-12">
         <div class="row">
             <canvas id="canvas" width="750" height="500" ></canvas>
         </div>
@@ -34,9 +35,9 @@
                 <div id="output"></div>
             </div>
         </div>
-    </div>
-    <div class="col-md-1"> <div style="width: 50px"></div></div>
-    <div class="col-md-3">
+</div>
+    <div class="col-sm-12 col-md-1"> <div style="width: 50px"></div></div>
+    <div class="col-sm-12 col-md-3">
         <!-- CHAT -->
         <div class="row">
             <!-- USERS -->
