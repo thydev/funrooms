@@ -45,17 +45,17 @@
         <script src="~/js/site.js" asp-append-version="true"></script>
 
     </environment>
-    @Html.Partial("_Favicons")
+
+     <partial name="_Favicons" />
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
             <div class="navbar-header">
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-left"><img id="brandLogo" src="~/images/FunR.jpg"></a>
+                <a href="/" class="navbar-left"><img id="brandLogo" src="~/images/FunR.jpg"></a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="nav-item nav-li"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                     <li class="nav-item nav-li"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                 </ul>
                 <partial name="_LoginPartial" />

@@ -26,7 +26,8 @@ hr {
 
 #brandLogo {
     height: 100px;
-    border: 1px solid transparent;
+    border: 2px double #ffffff;
+
     border-radius: 50px;
 }
 

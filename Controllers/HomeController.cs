@@ -26,7 +26,6 @@ namespace SocialLogin.Controllers
         [Route("")]
         public async Task<IActionResult> IndexAsync()
         {
-      
             System.Console.WriteLine(HttpContext.User);
             AppUser _user = await _userManager.GetUserAsync(HttpContext.User);
             System.Console.WriteLine(_user);
@@ -43,15 +42,7 @@ namespace SocialLogin.Controllers
         [Route("About")]
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
-        }
-
-        [HttpGet, Route("Contact")]
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
+            // ViewData["Message"] = "Your application description page.";
 
             return View();
         }
