@@ -23,7 +23,7 @@
 
 <div id="container">
     <!-- snail container needs background image of track2 -->
-    <div id="snailcontainer"></div>
+    <div id="snailcontainer" style="background-image: url('/images/Track2Runners.jpg'); height: 500px; width: 500px; padding-top: 140px"></div>
 </div>
 
 <script src="~/lib/signalr/signalr.js"></script>
@@ -104,7 +104,7 @@
             console.log($(connectid));
             $("#"+connectid).css("margin-left", marginleft);
             console.log("left after invoke",left)
-            if(left >= 420){
+            if(left >= 360){
                 snailhub.stop();
                 Gamescore();
             }
@@ -171,7 +171,7 @@
                 $(".readytext").hide();
             }
             var userLi = document.createElement('h3');
-            userLi.innerText = `${user.name}`;
+            userLi.innerText = `${user.name}`+"   racer# "+`${usercount}`;
             userLi.id = user.name;
             //class for user name once entered room below used bootstrap:
             userLi.className = "col-md-6 text-center";
@@ -201,7 +201,7 @@
             //loop through image array
             snailpic.src = "/images/SnailBlue.png";
             snailpic.width = "110";
-            snailpic.height = "80";
+            snailpic.height = "70";
             
             snaildiv.appendChild(snailrow);
             snailrow.appendChild(snailpic);
